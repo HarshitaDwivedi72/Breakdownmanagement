@@ -1,78 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { Container, NativeBaseProvider, Box, Center, Image } from 'native-base';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import axios from 'axios';
 
-const Main = () => {
 
-  const [barcodeValue, setBarcodeValue] = useState("");
-  const navigation = useNavigation();
-
+const Main = ({navigation}) => {
+  console.log("scdasc");
   return (
-    <NativeBaseProvider>
-       <Box flex={1} bg="#004aad" alignItems="center" justifyContent="center">
-        		<Box justifyContent="space-between" py={4} px={2}  bg="#fff" rounded="xl" width={350} maxWidth="93%"
-        	 	  _text={{
-          			fontWeight: "medium",
-      			  }}>
-     
-   
-        <TouchableOpacity >
-          <View style={styles.normal}>
-            <Text style={styles.text}>Customer Deliveries </Text>
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity >
-          <View style={styles.normal}>
-            <Text style={styles.text}>Customer Pickups</Text>
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity >
-          <View style={styles.normal}>
-            <Text style={styles.text}>Seller Deliveries </Text>
-          </View>
-        </TouchableOpacity>
-     
-          <TouchableOpacity >
-          <View style={styles.normal}>
-            <Text style={styles.text}>Seller Pickups</Text>
-          </View>
-        </TouchableOpacity>
-       
-
-        <Container style={styles.containter}>
-      
-
-
-            <TouchableOpacity onPress={() => navigation.navigate('barcode')}>
-
-              <View style={styles.bt1}>
-                
-                <Text style={styles.text1}>Sync</Text>
-              </View>
-
-            </TouchableOpacity>
-            <TouchableOpacity >
-              <View style={styles.bt2}>
-                <Text style={styles.text1}>Language</Text>
-              </View>
-
-            </TouchableOpacity>
-            <TouchableOpacity >
-              <View style={styles.bt3}>
-                <Text style={styles.text1}>Log Out</Text>
-              </View>
-
-            </TouchableOpacity>
-
-        </Container>
-        </Box>
-               
-      	</Box>
-    </NativeBaseProvider>
+    <View>
+    <Text>hello</Text>
+    <Button
+      title="Go to Jane's profile"
+      onPress={() =>
+        navigation.navigate('Profile', { name: 'Jane' })
+      }
+    />
+    </View>
   );
 };
 

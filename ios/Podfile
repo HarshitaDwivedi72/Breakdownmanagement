@@ -21,6 +21,7 @@ target 'dsqc' do
 
   pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
 
+
   target 'dsqcTests' do
     inherit! :complete
     # Pods for testing

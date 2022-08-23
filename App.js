@@ -13,6 +13,10 @@ import Qcrequired from './src/dsqc/Qcrequired';
 import Qcnotrequired from './src/dsqc/Qcnotrequired';
 import PickupfailReason from './src/dsqc/PickupfailReason';
 import ProductName from './src/dsqc/ProductName';
+import OTP from './src/dsqc/OTP';
+import Camera from './src/dsqc/Camera';
+import QCreason from './src/dsqc/QCreason';
+import Barcode from './src/dsqc/Barcode';
 
 const Stack = createNativeStackNavigator();
 
@@ -20,9 +24,26 @@ export default function App() {
   return (
      <NavigationContainer>
           <Stack.Navigator>
+
+          <Stack.Screen name="Barcode" component={Barcode} 
+          options={{ title: 'Welcome' }}
+          />
+
+
+          <Stack.Screen name="QCreason" component={QCreason} 
+          options={{ title: 'Welcome' }}
+          />
+
+          <Stack.Screen name="Camera" component={Camera} 
+          options={{ title: 'Welcome' }}
+          />
+
+          <Stack.Screen name="OTP" component={OTP} 
+          options={{ title: 'Welcome' }}
+          />
+
           <Stack.Screen name="ProductName" component={ProductName} 
           options={{ title: 'Welcome' }}
-          
           />
           <Stack.Screen name="PickupfailReason" component={PickupfailReason} 
           options={{ title: 'Welcome' }}
@@ -41,10 +62,7 @@ export default function App() {
             
             />
 
-            <Stack.Screen name="BreakdownManagementDriver" component={BreakdownManagementDriver} 
-            options={{ title: 'Welcome' }}
-            
-            />
+           
             <Stack.Screen name="BreakdownManagementDriver1" component={BreakdownManagementDriver1} 
             
             />
@@ -63,6 +81,11 @@ export default function App() {
             <Stack.Screen name="GateInOperationDriver" component={GateInOperationDriver} 
             
             />
+            
+           <Stack.Screen name="BreakdownManagementDriver" component={BreakdownManagementDriver} 
+           options={{ title: 'Welcome' }}
+           
+           />
           </Stack.Navigator>
       </NavigationContainer>
   );

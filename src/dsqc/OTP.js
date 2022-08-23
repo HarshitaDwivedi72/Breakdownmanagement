@@ -1,77 +1,63 @@
-import React, { useEffect, useState } from 'react';
-import { Container, ArrowForwardIcon, NativeBaseProvider, Box, Center, Image } from 'native-base';
-import { StyleSheet, Text, TouchableOpacity, View, ScrollView, TextInput,   VStack,
-    FormControl,
-    Input,getPick, Alert } from 'react-native';
+import React, { useState } from 'react';
+import { Container, NativeBaseProvider, Box, Input } from 'native-base';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+
 import { useNavigation } from '@react-navigation/native';
-const MainScreen = () => {
+
+const OTP = () => {
 
   const [barcodeValue, setBarcodeValue] = useState("");
   const [otp, setOtp] = useState('');
   const [showline, setLine] = useState(true)
-  const navigation = useNavigation();
+  // const navigation = useNavigation();
 
 
   return (
     <NativeBaseProvider>
-       <Box flex={1} bg="#004aad" alignItems="center" justifyContent="center">
-        		<Box justifyContent="space-between" py={4} px={2}  bg="#fff" rounded="xl" width={350} maxWidth="93%"
+       <Box flex={1} bg="#004aad" alignItems="center">
+        		<Box justifyContent="space-between" mt={8} pb={10}   bg="#fff" rounded="xl" width={550} maxWidth="90%"
         	 	  _text={{
           			fontWeight: "medium",
       			  }}>
-     
-   
-        <TouchableOpacity onPress={() => navigation.navigate(' ')}>
-          <View style={styles.normal}>
-            <Text style={styles.text}>Trip information </Text>
+    
+
+        <TouchableOpacity>
+        <View  style={[styles.normals, {
+          flexDirection: "row",
+          alignItems:"center",
+          justifyContent:"space-evenly"
+        }]}>
+          <Text style={styles.text}>Client Name  </Text>
+          <Text style={styles.text}>Client Reference No  </Text>
+        </View>
+        
+      </TouchableOpacity>
+      <TouchableOpacity>
+        <View style={[ {
+            backgroundColor:"white",
+            marginTop:35,
+            marginLeft:20
+        }]}>
+            <Text style={styles.text2}>Input OTP sent:</Text>
+            <Input></Input>
           </View>
-        </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => navigation.navigate('')}>
-          <View style={styles.normal}>
-            <Text style={styles.text}>Document details</Text>
-          </View>
-        </TouchableOpacity>
+      </TouchableOpacity>
+      <TouchableOpacity style={{justifyContent:"center"}}>
 
-        <TouchableOpacity onPress={() => navigation.navigate('')}>
-          <View style={styles.normal}>
-            <Text style={styles.text}>Breakdown management </Text>
-          </View>
-        </TouchableOpacity>
-     
-          <TouchableOpacity onPress={() => navigation.navigate('')}>
-          <View style={styles.normal}>
-            <Text style={styles.text}>Alert Center</Text>
-          </View>
-        </TouchableOpacity>
-       
+      <View style={styles.bt1}>
+        <Text style={styles.text1}>Sync</Text>
+      </View>
 
-        <Container style={styles.containter}>
-      
+    </TouchableOpacity>
+  
+    <TouchableOpacity>
+      <View style={styles.bt3}>
+        <Text style={styles.text1}>Language</Text>
+      </View>
 
+    </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => navigation.navigate('')}>
-
-              <View style={styles.bt1}>
-                {/* <FontAwesomeIcon icon={faQrcode } color="black" size={25} style={{marginLeft:8,marginTop:8}} /> */}
-                <Text style={styles.text1}>Sync</Text>
-              </View>
-
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate('')}>
-              <View style={styles.bt2}>
-                <Text style={styles.text1}>Language</Text>
-              </View>
-
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate('')}>
-              <View style={styles.bt3}>
-                <Text style={styles.text1}>Log Out</Text>
-              </View>
-
-            </TouchableOpacity>
-
-        </Container>
         </Box>
       		{/* <Center>
           		<Image 
@@ -91,7 +77,7 @@ const MainScreen = () => {
   );
 };
 
-export default MainScreen;
+export default OTP;
 
 export const styles = StyleSheet.create({
 
@@ -150,21 +136,41 @@ export const styles = StyleSheet.create({
     width: '90%',
     borderRadius: 5
   },
+  normals: {
+    fontFamily: 'open sans',
+    fontWeight: 'normal',
+    fontSize: 20,
+    color: '#eee',
+    marginTop: 10,
+    paddingTop: 1,
+    marginLeft: 10,
+    marginRight: 10,
+    paddingBottom: 15,
+    backgroundColor: '#eee',
+    width: '95%',
+    borderRadius: 5,
+    
+  },
 
   text: {
     alignSelf: 'center',
-    // paddingLeft: 30,
     color: '#000',
     fontWeight: 'bold',
-    fontSize: 18
-
+    fontSize: 18,
+    
+  },
+  text2: {
+    // alignSelf: 'center',
+    color: '#000',
+    fontWeight: 'bold',
+    fontSize: 18,
+    
   },
   text1: {
     alignSelf: 'center',
     color: '#fff',
     fontWeight: 'bold',
     fontSize: 18
-
   },
 
   bt1: {

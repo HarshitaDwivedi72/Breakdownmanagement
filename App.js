@@ -17,6 +17,7 @@ import OTP from './src/dsqc/OTP';
 import Camera from './src/dsqc/Camera';
 import QCreason from './src/dsqc/QCreason';
 import Barcode from './src/dsqc/Barcode';
+import DocumentDetailDriver from './src/dsqc/DocumentDetailDriver';
 
 const Stack = createNativeStackNavigator();
 
@@ -24,6 +25,11 @@ export default function App() {
   return (
      <NavigationContainer>
           <Stack.Navigator>
+
+          <Stack.Screen name="DocumentDetailDriver" component={DocumentDetailDriver} 
+          options={{ title: 'Welcome' }}
+          />
+
 
           <Stack.Screen name="Barcode" component={Barcode} 
           options={{ title: 'Welcome' }}

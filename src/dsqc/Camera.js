@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Container, NativeBaseProvider, Box } from 'native-base';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { useNavigation } from '@react-navigation/native';
 
@@ -37,7 +37,7 @@ const Camera = () => {
         
         <View style={{marginTop:150, marginBottom:150, alignItems:"center",
         justifyContent:"space-evenly"}} >
-        <Text style={{color:"black"}} >Camera</Text>
+        <Button title='open camera' onPress={() => navigation.navigate('NewCamera')} />
         
         </View>
 

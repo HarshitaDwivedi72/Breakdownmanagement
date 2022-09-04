@@ -1,16 +1,60 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, NativeBaseProvider, Box, Input } from 'native-base';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-
+import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
+import OTPInputView from '@twotalltotems/react-native-otp-input'
 
 const OTP = () => {
 
   const [barcodeValue, setBarcodeValue] = useState("");
   const [otp, setOtp] = useState('');
   const [showline, setLine] = useState(true)
-  // const navigation = useNavigation();
+  const navigation = useNavigation();
 
+  const [OTP, setOTP] = useState('');
+  
+  const generateOTP = () => {
+  const characters =
+    '0123456789';
+  const characterCount = characters.length;
+  let OTPvalue = '';
+  for (let i = 0; i < 4; i++) {
+    OTPvalue += characters[Math.floor(Math.random() * characterCount)];
+  }
+  setOTP(OTPvalue);
+ 
+  return OTPvalue;
+};
+const r = OTP;
+console.log(r);
+ 
+const sendSmsOtp = async (mobileNumber, otp) => {
+  const url = 'https://bked.logistiex.com/SMS/msg';
+  let returnData;
+  console.log('send sms otp', mobileNumber, otp);
+  const bodyData = {
+    "mobileNumber" : "918955593269",
+    "otp" :  r
+  };
+  const response = await axios.post(url, bodyData);
+  console.log('send sms response', response);
+  if (response.status === 200) {
+    returnData = {
+      status: 'Success',
+      ...response.data,
+    };
+  } else {
+    returnData = {
+      status: 'Failure',
+    };
+  }
+}
+
+useEffect(() => {
+  // sendSmsOtp();
+  generateOTP();
+}, []);
 
   return (
     <NativeBaseProvider>
@@ -39,7 +83,7 @@ const OTP = () => {
             marginLeft:20
         }]}>
             <Text style={styles.text2}>Input OTP sent:</Text>
-            <Input></Input>
+            <Input  keyboardType='numeric' placeholderTextColor="blue" placeholder="pin" />
           </View>
 
       </TouchableOpacity>
@@ -219,6 +263,25 @@ export const styles = StyleSheet.create({
     marginLeft: 200
 
 
+  },
+  borderStyleBase: {
+    width: 30,
+    height: 45
+  },
+
+  borderStyleHighLighted: {
+    borderColor: "#03DAC6",
+  },
+
+  underlineStyleBase: {
+    width: 30,
+    height: 45,
+    borderWidth: 0,
+    borderBottomWidth: 1,
+  },
+
+  underlineStyleHighLighted: {
+    borderColor: "#03DAC6",
   },
 
 });

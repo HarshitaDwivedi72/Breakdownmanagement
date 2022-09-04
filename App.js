@@ -1,4 +1,5 @@
 import * as React from 'react';
+import './ignoreWarnings'
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import BreakdownManagementDriver from './src/BreakdownManagementDriver';
@@ -18,6 +19,8 @@ import Camera from './src/dsqc/Camera';
 import QCreason from './src/dsqc/QCreason';
 import Barcode from './src/dsqc/Barcode';
 import DocumentDetailDriver from './src/dsqc/DocumentDetailDriver';
+import NewCamera from './src/dsqc/NewCamera';
+import NewBarcode from './src/dsqc/NewBarcode';
 
 const Stack = createNativeStackNavigator();
 
@@ -26,25 +29,39 @@ export default function App() {
      <NavigationContainer>
           <Stack.Navigator>
 
-          <Stack.Screen name="DocumentDetailDriver" component={DocumentDetailDriver} 
+          <Stack.Screen name="OTP" component={OTP} 
           options={{ title: 'Welcome' }}
           />
 
-
+            
           <Stack.Screen name="Barcode" component={Barcode} 
           options={{ title: 'Welcome' }}
           />
 
-
-          <Stack.Screen name="QCreason" component={QCreason} 
+          <Stack.Screen name="NewBarcode" component={NewBarcode} 
           options={{ title: 'Welcome' }}
           />
+
+
+
+         
 
           <Stack.Screen name="Camera" component={Camera} 
           options={{ title: 'Welcome' }}
           />
 
-          <Stack.Screen name="OTP" component={OTP} 
+          <Stack.Screen name="NewCamera" component={NewCamera} 
+          options={{ title: 'Welcome' }}
+          />
+
+          <Stack.Screen name="DocumentDetailDriver" component={DocumentDetailDriver} 
+          options={{ title: 'Welcome' }}
+          />
+
+
+        
+
+          <Stack.Screen name="QCreason" component={QCreason} 
           options={{ title: 'Welcome' }}
           />
 

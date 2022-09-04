@@ -1,4 +1,6 @@
 rootProject.name = 'dsqc'
+include ':react-native-permissions'
+project(':react-native-permissions').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-permissions/android')
 include ':@react-native-community_checkbox'
 project(':@react-native-community_checkbox').projectDir = new File(rootProject.projectDir, '../node_modules/@react-native-community/checkbox/android')
 include ':react-native-gesture-handler'

@@ -1,16 +1,22 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, NativeBaseProvider, Box, Input } from 'native-base';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { useNavigation } from '@react-navigation/native';
 
-const Barcode = () => {
+const Barcode = ({route}) => {
 
   const [barcodeValue, setBarcodeValue] = useState("");
   const [otp, setOtp] = useState('');
   const [showline, setLine] = useState(true)
-  // const navigation = useNavigation();
+  const navigation = useNavigation();
 
+  
+  useEffect(() => {
+    if(route.params){
+      setBarcodeValue(route.params.barcode);
+    }
+  }, [barcodeValue, route]);
 
   return (
     <NativeBaseProvider>
@@ -44,7 +50,7 @@ const Barcode = () => {
 
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate('')}>
+      <TouchableOpacity onPress={() => navigation.navigate('NewBarcode')}>
       <View style={[styles.normal, {
         marginTop:10,
         marginBottom:40
@@ -53,7 +59,7 @@ const Barcode = () => {
       </View>
     </TouchableOpacity>
 
-    <TouchableOpacity onPress={() => navigation.navigate('')}>
+    <TouchableOpacity onPress={() => navigation.navigate('NewBarcode')}>
       <View style={[styles.normal, {
         marginTop:10,
         marginBottom:40
@@ -68,7 +74,7 @@ const Barcode = () => {
         marginBottom:40,
         backgroundColor:"white"
       }]}>
-        <Text style={styles.text}>shipment id</Text>
+        <Text style={styles.text}>{barcodeValue}</Text>
 
       </View>
 

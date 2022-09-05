@@ -30,12 +30,13 @@ const r = OTP;
 console.log(r);
  
 const sendSmsOtp = async (mobileNumber, otp) => {
+  const ottp =  generateOTP();
   const url = 'https://bked.logistiex.com/SMS/msg';
   let returnData;
-  console.log('send sms otp', mobileNumber, otp);
+  console.log('send sms otp', mobileNumber, ottp);
   const bodyData = {
     "mobileNumber" : "918955593269",
-    "otp" :  r
+    "otp" :  ottp
   };
   const response = await axios.post(url, bodyData);
   console.log('send sms response', response);
@@ -50,11 +51,6 @@ const sendSmsOtp = async (mobileNumber, otp) => {
     };
   }
 }
-
-useEffect(() => {
-  // sendSmsOtp();
-  generateOTP();
-}, []);
 
   return (
     <NativeBaseProvider>
@@ -82,11 +78,43 @@ useEffect(() => {
             marginTop:35,
             marginLeft:20
         }]}>
+            <TouchableOpacity onPress={() => sendSmsOtp()}>
             <Text style={styles.text2}>Input OTP sent:</Text>
+            </TouchableOpacity>
             <Input  keyboardType='numeric' placeholderTextColor="blue" placeholder="pin" />
           </View>
 
       </TouchableOpacity>
+
+      <TouchableOpacity onPress={() => navigation.navigate('')}>
+          <View style={[styles.normals, {
+            display:"flex",
+            alignItems:"center",
+            marginTop:15,
+            backgroundColor:"lightblue",
+            marginBottom:20,
+            width:100
+          }]}>
+            <Text style={[styles.text, {
+                marginTop:10
+            }]}>submit</Text>
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity>
+        <View style={[ {
+            backgroundColor:"white",
+            marginTop:5,
+            marginLeft:20,
+            marginBottom:30
+        }]}>
+            <TouchableOpacity onPress={() => sendSmsOtp()}>
+            <Text style={styles.text2}>resend otp</Text>
+            </TouchableOpacity>
+          </View>
+
+      </TouchableOpacity>
+
       <TouchableOpacity style={{justifyContent:"center"}}>
 
       <View style={styles.bt1}>

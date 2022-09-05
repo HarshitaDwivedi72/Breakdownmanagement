@@ -29,7 +29,8 @@ export default function App() {
      <NavigationContainer>
           <Stack.Navigator>
 
-          <Stack.Screen name="OTP" component={OTP} 
+        
+<Stack.Screen name="OTP" component={OTP} 
           options={{ title: 'Welcome' }}
           />
 
@@ -38,13 +39,10 @@ export default function App() {
           options={{ title: 'Welcome' }}
           />
 
+
           <Stack.Screen name="NewBarcode" component={NewBarcode} 
           options={{ title: 'Welcome' }}
           />
-
-
-
-         
 
           <Stack.Screen name="Camera" component={Camera} 
           options={{ title: 'Welcome' }}
@@ -57,9 +55,6 @@ export default function App() {
           <Stack.Screen name="DocumentDetailDriver" component={DocumentDetailDriver} 
           options={{ title: 'Welcome' }}
           />
-
-
-        
 
           <Stack.Screen name="QCreason" component={QCreason} 
           options={{ title: 'Welcome' }}
@@ -82,10 +77,7 @@ export default function App() {
           />
           <Stack.Screen name="MainScreen" component={MainScreen} 
             options={{ title: 'Welcome' }}
-            
             />
-
-           
             <Stack.Screen name="BreakdownManagementDriver1" component={BreakdownManagementDriver1} 
             
             />

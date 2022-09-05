@@ -14,13 +14,9 @@ import {
 const NewBarcode = ({navigation}) => {
     const [barcode, setBarcode] = useState("");
     const onSuccess = e => {
-        // Linking.openURL(e.data).catch(err =>
-        //   console.error('An error occured', err)
-        // );
         setBarcode(e.data);
         
     }
-    // console.log(barcode);
 
     useEffect(() => {
         if(barcode != ""){

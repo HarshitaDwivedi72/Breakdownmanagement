@@ -3,6 +3,7 @@ import { Container, NativeBaseProvider, Box, Input } from 'native-base';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
 
 const Barcode = ({route}) => {
 
@@ -10,6 +11,47 @@ const Barcode = ({route}) => {
   const [otp, setOtp] = useState('');
   const [showline, setLine] = useState(true)
   const navigation = useNavigation();
+
+  
+  const [OTP, setOTP] = useState('');
+  
+  const generateOTP = () => {
+  const characters =
+    '0123456789';
+  const characterCount = characters.length;
+  let OTPvalue = '';
+  for (let i = 0; i < 4; i++) {
+    OTPvalue += characters[Math.floor(Math.random() * characterCount)];
+  }
+  setOTP(OTPvalue);
+ 
+  return OTPvalue;
+};
+const r = OTP;
+console.log(r);
+ 
+const sendSmsOtp = async (mobileNumber, otp) => {
+  const ottp =  generateOTP();
+  const url = 'https://bked.logistiex.com/SMS/msg';
+  let returnData;
+  console.log('send sms otp', mobileNumber, ottp);
+  const bodyData = {
+    "mobileNumber" : "918955593269",
+    "otp" :  ottp
+  };
+  const response = await axios.post(url, bodyData);
+  console.log('send sms response', response);
+  if (response.status === 200) {
+    returnData = {
+      status: 'Success',
+      ...response.data,
+    };
+  } else {
+    returnData = {
+      status: 'Failure',
+    };
+  }
+}
 
   
   useEffect(() => {
@@ -44,20 +86,42 @@ const Barcode = ({route}) => {
             marginTop:35,
             marginLeft:20
         }]}>
+            <TouchableOpacity onPress={() => sendSmsOtp()}>
             <Text style={styles.text2}>Input OTP sent:</Text>
-            <Input></Input>
+            </TouchableOpacity>
+            <Input  keyboardType='numeric' placeholderTextColor="blue" placeholder="pin" />
           </View>
 
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate('NewBarcode')}>
-      <View style={[styles.normal, {
-        marginTop:10,
-        marginBottom:40
-      }]}>
-        <Text style={styles.text}>Submit</Text>
-      </View>
-    </TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate('')}>
+          <View style={[styles.normals, {
+            display:"flex",
+            alignItems:"center",
+            marginTop:15,
+            backgroundColor:"lightblue",
+            marginBottom:20,
+            width:100
+          }]}>
+            <Text style={[styles.text, {
+                marginTop:10
+            }]}>submit</Text>
+          </View>
+        </TouchableOpacity>
+        
+    <TouchableOpacity>
+        <View style={[ {
+            backgroundColor:"white",
+            marginTop:5,
+            marginLeft:20,
+            marginBottom:30
+        }]}>
+            <TouchableOpacity onPress={() => sendSmsOtp()}>
+            <Text style={styles.text2}>resend otp</Text>
+            </TouchableOpacity>
+          </View>
+
+      </TouchableOpacity>
 
     <TouchableOpacity onPress={() => navigation.navigate('NewBarcode')}>
       <View style={[styles.normal, {

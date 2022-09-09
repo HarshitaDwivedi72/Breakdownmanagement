@@ -21,6 +21,9 @@ import Barcode from './src/dsqc/Barcode';
 import DocumentDetailDriver from './src/dsqc/DocumentDetailDriver';
 import NewCamera from './src/dsqc/NewCamera';
 import NewBarcode from './src/dsqc/NewBarcode';
+import MasterManifest from './src/dsqc/MasterManifest';
+import TransportManifest from './src/dsqc/TransportManifest';
+import RunSheet from './src/dsqc/RunSheet';
 
 const Stack = createNativeStackNavigator();
 
@@ -29,9 +32,23 @@ export default function App() {
      <NavigationContainer>
           <Stack.Navigator>
 
-        
-<Stack.Screen name="OTP" component={OTP} 
+          <Stack.Screen name="DocumentDetailDriver" component={DocumentDetailDriver} 
           options={{ title: 'Welcome' }}
+          />
+          <Stack.Screen name="RunSheet" component={RunSheet} 
+          options={{ title: 'Welcome' }}
+          />
+          <Stack.Screen name="TransportManifest" component={TransportManifest} 
+          options={{ title: 'Welcome' }}
+          />
+
+          <Stack.Screen name="MasterManifest" component={MasterManifest} 
+          options={{ title: 'Welcome' }}
+          />
+
+        
+          <Stack.Screen name="OTP" component={OTP} 
+              options={{ title: 'Welcome' }}
           />
 
             
@@ -52,9 +69,7 @@ export default function App() {
           options={{ title: 'Welcome' }}
           />
 
-          <Stack.Screen name="DocumentDetailDriver" component={DocumentDetailDriver} 
-          options={{ title: 'Welcome' }}
-          />
+          
 
           <Stack.Screen name="QCreason" component={QCreason} 
           options={{ title: 'Welcome' }}

@@ -1,16 +1,43 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, NativeBaseProvider, Box } from 'native-base';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
 
-const Qcrequired = () => {
+const Qcrequired = ({route}) => {
 
   const [barcodeValue, setBarcodeValue] = useState("");
   const [otp, setOtp] = useState('');
-  const [showline, setLine] = useState(true)
+  const [showline, setLine] = useState(true);
+  const [selected, setSelected] = useState("");
+  const [data,setData] = useState([]);
+  const [headerValue, setHeaderValue] = useState({});
+  const [MiddleValue, setMiddleValue] = useState([]);
   const navigation = useNavigation();
+  useEffect(() => 
+ {
+  (async() => {
+    
+  
+      await axios.post('https://bked.logistiex.com/DSQCOrderInfo/orderInfo',{
+        Client_Reference_No : route.params.Client_Reference_No
+      })
+      .then((response) => {
 
+          // console.log(response.data);
+          setMiddleValue(response.data);
+      })
+      .catch((e) => {
+        console.log(e)
+      })
+
+  }) ();
+ }
+,[selected])
+
+
+console.log(MiddleValue);
 
   return (
     <NativeBaseProvider>
@@ -29,19 +56,19 @@ const Qcrequired = () => {
           }]}>
             <View>
             <Text style={styles.text}>Picked  </Text>
-            <Text style={styles.text}>0  </Text>
+            <Text style={styles.text}>{route.params.pickedShipments}</Text>
             </View>
             <View>
             <Text style={styles.text}>Rejected  </Text>
-            <Text style={styles.text}>0  </Text>
+            <Text style={styles.text}>{route.params.rejectedShipments}</Text>
             </View>
             <View>
             <Text style={styles.text}>Failed  </Text>
-            <Text style={styles.text}>0  </Text>
+            <Text style={styles.text}>{route.params.failedShipments}</Text>
             </View>
             <View>
             <Text style={styles.text}>Pending  </Text>
-            <Text style={styles.text}>0  </Text>
+            <Text style={styles.text}>{route.params.pendingShipments}</Text>
             </View>
           </View>
           
@@ -53,8 +80,8 @@ const Qcrequired = () => {
           alignItems:"center",
           justifyContent:"space-evenly"
         }]}>
-          <Text style={styles.text}>Client Name  </Text>
-          <Text style={styles.text}>Client Reference No  </Text>
+          <Text style={styles.text}>{route.params.client_name}</Text>
+          <Text style={styles.text}>{route.params.Client_Reference_No}</Text>
         </View>
         
       </TouchableOpacity>
@@ -90,7 +117,7 @@ const Qcrequired = () => {
             marginTop:35,
             marginLeft:20
         }]}>
-            <Text style={styles.text2}>PinCode </Text>
+            <Text style={styles.text2}>{route.params.PinCode} </Text>
           </View>
 
           <View style={[ {

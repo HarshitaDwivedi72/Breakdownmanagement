@@ -24,6 +24,7 @@ import NewBarcode from './src/dsqc/NewBarcode';
 import MasterManifest from './src/dsqc/MasterManifest';
 import TransportManifest from './src/dsqc/TransportManifest';
 import RunSheet from './src/dsqc/RunSheet';
+import CustomerPickup from './src/dsqc/CustomerPickup';
 
 const Stack = createNativeStackNavigator();
 
@@ -31,6 +32,16 @@ export default function App() {
   return (
      <NavigationContainer>
           <Stack.Navigator>
+
+          <Stack.Screen name="CustomerPickup" component={CustomerPickup} 
+          options={{ title: 'Welcome' }}
+          />
+
+          <Stack.Screen name="Qcrequired" component={Qcrequired} 
+          options={{ title: 'Welcome' }}
+          
+          />
+         
 
           <Stack.Screen name="DocumentDetailDriver" component={DocumentDetailDriver} 
           options={{ title: 'Welcome' }}
@@ -86,10 +97,7 @@ export default function App() {
           options={{ title: 'Welcome' }}
           
           />
-          <Stack.Screen name="Qcrequired" component={Qcrequired} 
-          options={{ title: 'Welcome' }}
-          
-          />
+        
           <Stack.Screen name="MainScreen" component={MainScreen} 
             options={{ title: 'Welcome' }}
             />

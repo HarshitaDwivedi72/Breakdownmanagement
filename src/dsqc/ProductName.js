@@ -1,15 +1,35 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, NativeBaseProvider, Box } from 'native-base';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
 
-const ProductName = () => {
+const ProductName = ({route}) => {
 
   const [barcodeValue, setBarcodeValue] = useState("");
   const [otp, setOtp] = useState('');
   const [showline, setLine] = useState(true)
+  const [MiddleValue, setMiddleValue] = useState([]);
   const navigation = useNavigation();
+
+  useEffect(() => 
+ {
+  (async() => {
+    
+  
+      await axios.get(`https://bked.logistiex.com/DSQCPickupStart/startPickup?Client_Reference_No=${route.params.Client_Reference_No}`)
+      .then((response) => {
+
+          setMiddleValue(response.data.details);
+      })
+      .catch((e) => {
+        console.log(e)
+      })
+
+  }) ();
+ }
+,[])
 
 
   return (
@@ -27,8 +47,8 @@ const ProductName = () => {
           alignItems:"center",
           justifyContent:"space-evenly"
         }]}>
-          <Text style={styles.text}>Client Name  </Text>
-          <Text style={styles.text}>Client Reference No  </Text>
+          <Text style={styles.text}>{MiddleValue.Client_Name}</Text>
+          <Text style={styles.text}>{route.params.Client_Reference_No}</Text>
         </View>
         
       </TouchableOpacity>
@@ -39,6 +59,7 @@ const ProductName = () => {
             marginLeft:20
         }]}>
             <Text style={styles.text2}>QC : Product Information </Text>
+            <Text style={styles.text2}>{MiddleValue.productName}</Text>
           </View>
           <View style={[ {
             backgroundColor:"white",
@@ -52,9 +73,32 @@ const ProductName = () => {
             marginTop:35,
             marginLeft:20
         }]}>
-            <Text style={styles.text2}>Brand: Brand name </Text>
+            <Text style={styles.text2}>Brand: {MiddleValue.brand} </Text>
           </View>
 
+          <View style={[ {
+            backgroundColor:"white",
+            marginTop:35,
+            marginLeft:20
+        }]}>
+            <Text style={styles.text2}>Price: {MiddleValue.price} </Text>
+          </View>
+
+          <View style={[ {
+            backgroundColor:"white",
+            marginTop:35,
+            marginLeft:20
+        }]}>
+            <Text style={styles.text2}>Category: {MiddleValue.category} </Text>
+          </View>
+
+          <View style={[ {
+            backgroundColor:"white",
+            marginTop:35,
+            marginLeft:20
+        }]}>
+            <Text style={styles.text2}>size: {MiddleValue.size} </Text>
+          </View>
          
         <View>
         <View  style={[styles.normal, {
@@ -63,13 +107,19 @@ const ProductName = () => {
           justifyContent:"space-evenly",
           backgroundColor:"white"
         }]}>
+          <TouchableOpacity onPress={() => navigation.navigate('QCreason')} >
           <Text style={[styles.text, {
             backgroundColor:"lightgreen",
             padding:5,
             borderRadius:10,
             fontWeight:"400"
           }]}>Marked QC Reject </Text>
+          </TouchableOpacity>
 
+          <TouchableOpacity onPress={() => navigation.navigate('Camera', {
+            Client_Reference_No : route.params.Client_Reference_No,
+            Client_Name : MiddleValue.Client_Name
+          })} >
           <Text style={[styles.text, {
             backgroundColor:"lightblue",
             padding:5,
@@ -79,6 +129,7 @@ const ProductName = () => {
             alignSelf:"center",
             marginLeft:20
           }]}>start QC </Text>
+          </TouchableOpacity>
         </View>
         
       </View>

@@ -4,7 +4,7 @@ import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { useNavigation } from '@react-navigation/native';
 
-const Camera = () => {
+const Camera = ({route}) => {
 
   const [barcodeValue, setBarcodeValue] = useState("");
   const [otp, setOtp] = useState('');
@@ -43,7 +43,10 @@ const Camera = () => {
 
     
      
-          <TouchableOpacity onPress={() => navigation.navigate('')}>
+          <TouchableOpacity onPress={() => navigation.navigate('Barcode', {
+            Client_Reference_No : route.params.Client_Reference_No,
+            Client_Name : route.params.Client_Name
+          })}>
           <View style={[styles.normal, {
             marginTop:10,
             marginBottom:40

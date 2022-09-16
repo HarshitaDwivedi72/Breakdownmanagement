@@ -5,6 +5,9 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 
+// Client_Reference_No : route.params.Client_Reference_No,
+//             Client_Name : route.params.Client_Name
+
 const Barcode = ({route}) => {
 
   const [barcodeValue, setBarcodeValue] = useState("");
@@ -53,6 +56,20 @@ const sendSmsOtp = async (mobileNumber, otp) => {
   }
 }
 
+const HandlerSubmit = () => {
+  axios.post('https://bked.logistiex.com/DSQCPickupStart/postMarkPickup', {
+    QCStatus : true,
+    Client_Reference_No : barcodeValue
+
+})
+  .then(function (response) {
+      console.log(response.data, "hello");
+  })
+  .catch(function (error) {
+      console.log(error);
+  });
+}
+
   
   useEffect(() => {
     if(route.params){
@@ -75,8 +92,8 @@ const sendSmsOtp = async (mobileNumber, otp) => {
           alignItems:"center",
           justifyContent:"space-evenly"
         }]}>
-          <Text style={styles.text}>Client Name  </Text>
-          <Text style={styles.text}>Client Reference No  </Text>
+          <Text style={styles.text}>{route.params.Client_Name}</Text>
+          <Text style={styles.text}>{route.params.Client_Reference_No}</Text>
         </View>
         
       </TouchableOpacity>
@@ -142,7 +159,7 @@ const sendSmsOtp = async (mobileNumber, otp) => {
 
       </View>
 
-      <TouchableOpacity onPress={() => navigation.navigate('')}>
+      <TouchableOpacity onPress={() => HandlerSubmit()}>
       <View style={[styles.normal, {
         marginTop:10,
         marginBottom:40

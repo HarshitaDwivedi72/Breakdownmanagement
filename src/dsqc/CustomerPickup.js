@@ -10,22 +10,21 @@ const CustomerPickup = () => {
   const [barcodeValue, setBarcodeValue] = useState("");
   const [otp, setOtp] = useState('');
   const [showline, setLine] = useState(true)
-  const [selected, setSelected] = useState("");
+  const [selected, setSelected] = useState("345678");
   const [data,setData] = useState([]);
   const [headerValue, setHeaderValue] = useState({});
   const [MiddleValue, setMiddleValue] = useState([]);
   const navigation = useNavigation();
 
   useEffect(() => 
-    //Get Values from database
    {
     (async() => {
-        await axios.get('https://bked.logistiex.com/DSQCCustomerList/allPincodes')
+        await axios.get('https://bked.logistiex.com/DSQCCustomerList/allPincodes?BikerId=BI001')
         .then((response) => {
           // Store Values in Temporary Array
   
-          let newArray = response.data.map((item) => {
-            return {key:  item.CustomerPincode, value: item.CustomerPincode}
+          let newArray = response.data.pincodes.map((item) => {
+            return {key:  item, value: item}
           })
           //Set Data Variable
           setData(newArray)
@@ -36,9 +35,7 @@ const CustomerPickup = () => {
 
 
 
-        await axios.post('https://bked.logistiex.com/DSQCCustomerList/returnStatus',{
-            CustomerPincode : selected
-        })
+        await axios.get(`https://bked.logistiex.com/DSQCCustomerList/returnStatus?CustomerPincode=345678`)
         .then((response) => {
 
             // console.log(response.data);
@@ -49,13 +46,11 @@ const CustomerPickup = () => {
         })
 
 
-        await axios.post('https://bked.logistiex.com/DSQCCustomerList/customerList',{
-            CustomerPincode : selected
-        })
+        await axios.get(`https://bked.logistiex.com/DSQCCustomerList/customerList?CustomerPincode=${selected}`)
         .then((response) => {
 
             // console.log(response.data);
-            setMiddleValue(response.data);
+            setMiddleValue(response.data.RSData);
         })
         .catch((e) => {
           console.log(e)
@@ -63,9 +58,10 @@ const CustomerPickup = () => {
 
     }) ();
    }
-  ,[selected])
-
- console.log(MiddleValue);
+  ,[])
+  //  console.log(data, "data");
+  //  console.log(headerValue, "headervale");
+//  console.log(MiddleValue, "hytcng");
 
   return (
     <NativeBaseProvider>

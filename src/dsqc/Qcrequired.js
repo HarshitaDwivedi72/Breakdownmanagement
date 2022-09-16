@@ -20,13 +20,10 @@ const Qcrequired = ({route}) => {
   (async() => {
     
   
-      await axios.post('https://bked.logistiex.com/DSQCOrderInfo/orderInfo',{
-        Client_Reference_No : route.params.Client_Reference_No
-      })
+      await axios.get(`https://bked.logistiex.com/DSQCOrderInfo/orderInfo?Client_Reference_No=${route.params.Client_Reference_No}`)
       .then((response) => {
 
-          // console.log(response.data);
-          setMiddleValue(response.data);
+          setMiddleValue(response.data.details);
       })
       .catch((e) => {
         console.log(e)
@@ -35,9 +32,6 @@ const Qcrequired = ({route}) => {
   }) ();
  }
 ,[selected])
-
-
-console.log(MiddleValue);
 
   return (
     <NativeBaseProvider>
@@ -103,14 +97,14 @@ console.log(MiddleValue);
             marginTop:35,
             marginLeft:20
         }]}>
-            <Text style={styles.text2}>customer Name </Text>
+            <Text style={styles.text2}>{MiddleValue.Customer_Name} </Text>
           </View>
           <View style={[ {
             backgroundColor:"white",
             marginTop:35,
             marginLeft:20
         }]}>
-            <Text style={styles.text2}>customer Address </Text>
+            <Text style={styles.text2}>{MiddleValue.Customer_Address} </Text>
           </View>
           <View style={[ {
             backgroundColor:"white",
@@ -127,7 +121,7 @@ console.log(MiddleValue);
         }]}>
             <Text style={[styles.text2, {
                 fontWeight:"200"
-            }]}>Type of Product(s) to be picked: </Text>
+            }]}>Type of Product(s) to be picked: {MiddleValue.Type}</Text>
           </View>
 
           <View style={[ {
@@ -137,7 +131,7 @@ console.log(MiddleValue);
         }]}>
             <Text style={[styles.text2, {
                 fontWeight:"200"
-            }]}>Number of total item(s) to be picked </Text>
+            }]}>Number of total item(s) to be picked :- {MiddleValue.NoOfItems}</Text>
           </View>
 
     
@@ -146,7 +140,13 @@ console.log(MiddleValue);
           <View style={[styles.normal, {
             marginTop:10
           }]}>
-            <Text style={styles.text}>Qc is Required</Text>
+            {
+            !MiddleValue.QCStatus ? (
+              <Text style={styles.text}>Qc is Required</Text>
+                  ) : (
+                    <Text style={styles.text}>Qc is not Required</Text>
+                  )
+            }
           </View>
         </TouchableOpacity>
 
@@ -157,22 +157,57 @@ console.log(MiddleValue);
           justifyContent:"space-evenly",
           backgroundColor:"white"
         }]}>
+          <TouchableOpacity onPress={() => navigation.navigate('PickupfailReason',{
+            pickedShipments :route.params.pickedShipments,
+            rejectedShipments : route.params.rejectedShipments,
+            failedShipments : route.params.failedShipments,
+            pendingShipments :route.params.pendingShipments,
+            client_name : route.params.client_name,
+            Client_Reference_No : route.params.Client_Reference_No
+          })} >
           <Text style={[styles.text, {
             backgroundColor:"lightgreen",
             padding:5,
             borderRadius:10,
             fontWeight:"400"
           }]}>Marked Pickup Failed </Text>
+          </TouchableOpacity>
 
-          <Text style={[styles.text, {
-            backgroundColor:"lightblue",
-            padding:5,
-            borderRadius:10,
-            fontWeight:"400",
-            width:150,
-            alignSelf:"center",
-            marginLeft:20
-          }]}>start picking </Text>
+{
+            !MiddleValue.QCStatus ? (
+              <TouchableOpacity onPress={() => navigation.navigate('ProductName', {
+                Client_Reference_No : route.params.Client_Reference_No
+              })} >
+                <Text style={[styles.text, {
+                backgroundColor:"lightblue",
+                padding:5,
+                borderRadius:10,
+                fontWeight:"400",
+                width:150,
+                alignSelf:"center",
+                marginLeft:20
+              }]}>start picking </Text>
+              </TouchableOpacity>
+                  ) : (
+                    <TouchableOpacity onPress={() => navigation.navigate('Barcode', {
+                      Client_Name : route.params.client_name,
+                      Client_Reference_No : route.params.Client_Reference_No
+
+                    })} >
+                      <Text style={[styles.text, {
+                      backgroundColor:"lightblue",
+                      padding:5,
+                      borderRadius:10,
+                      fontWeight:"400",
+                      width:150,
+                      alignSelf:"center",
+                      marginLeft:20
+                    }]}>Mark Pickup </Text>
+                    </TouchableOpacity>
+                  )
+            }
+
+          
         </View>
         
       </View>

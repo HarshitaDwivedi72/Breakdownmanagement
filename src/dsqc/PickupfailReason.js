@@ -4,7 +4,7 @@ import { Button, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
 import { useNavigation } from '@react-navigation/native';
 
-const PickupfailReason = () => {
+const PickupfailReason = ({route}) => {
 
     const initialState = {
         Pickup_Failure_Reason_1: false,
@@ -17,6 +17,8 @@ const PickupfailReason = () => {
   const [isSelected, setSelection] = useState("");
   const [state, setState] = React.useState(initialState);
   const [toggleButton, setToggleButton] = React.useState(false);
+
+      console.log(state);
 
   return (
     <NativeBaseProvider>
@@ -35,19 +37,19 @@ const PickupfailReason = () => {
           }]}>
             <View>
             <Text style={styles.text}>Picked  </Text>
-            <Text style={styles.text}>0  </Text>
+            <Text style={styles.text}>{route.params.pickedShipments}</Text>
             </View>
             <View>
             <Text style={styles.text}>Rejected  </Text>
-            <Text style={styles.text}>0  </Text>
+            <Text style={styles.text}>{route.params.rejectedShipments}</Text>
             </View>
             <View>
             <Text style={styles.text}>Failed  </Text>
-            <Text style={styles.text}>0  </Text>
+            <Text style={styles.text}>{route.params.failedShipments}</Text>
             </View>
             <View>
             <Text style={styles.text}>Pending  </Text>
-            <Text style={styles.text}>0  </Text>
+            <Text style={styles.text}>{route.params.pendingShipments}</Text>
             </View>
           </View>
           
@@ -59,8 +61,8 @@ const PickupfailReason = () => {
           alignItems:"center",
           justifyContent:"space-evenly"
         }]}>
-          <Text style={styles.text}>Client Name  </Text>
-          <Text style={styles.text}>Client Reference No  </Text>
+          <Text style={styles.text}>{route.params.client_name}</Text>
+          <Text style={styles.text}>{route.params.Client_Reference_No}</Text>
         </View>
         
       </TouchableOpacity>
@@ -77,7 +79,7 @@ const PickupfailReason = () => {
           })
         }
       />
-      <Text style={{color:"black"}}  >Pickup Failure Reason 1</Text>
+      <Text style={{color:"black"}}>Pickup Failure Reason 1</Text>
     </View>
     <View style={styles.checkboxWrapper}>
     <CheckBox
@@ -330,6 +332,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 5,
+    backgroundColor:"grey"
   },
 
 });

@@ -11,6 +11,20 @@ const Camera = ({route}) => {
   const [showline, setLine] = useState(true)
   const navigation = useNavigation();
 
+  // const onDropHandler = (files) => {
+  //   const headers = {
+  //     'Content-Type': 'multipart/form-data'
+  //   }
+  //   let formData = new FormData()
+  //   formData.append('file', files[0])
+  //   API.post('/web/v1.0/upload', {
+  //     formData
+  //   }, {
+  //     headers: headers
+  //   }).then(response => {
+  //     console.log(response.data)
+  //   })
+
 
   return (
     <NativeBaseProvider>

@@ -1,16 +1,98 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, NativeBaseProvider, Box, Input } from 'native-base';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
 
-const QCreason = () => {
+const QCreason = ({route}) => {
 
   const [barcodeValue, setBarcodeValue] = useState("");
   const [otp, setOtp] = useState('');
-  const [showline, setLine] = useState(true)
+  const [showline, setLine] = useState(true);
+  const [MiddleValue, setMiddleValue] = useState({});
+  const [question, setQuestion] = useState([]);
+  const [remark, setRemark] = useState('');
   const navigation = useNavigation();
 
+
+useEffect(() => 
+{
+ (async() => {
+
+     await axios.get(`https://bked.logistiex.com/DSQCQualityCheck/QualityCheckQuestions?shipmentId=700000680505`)
+     .then((response) => {
+
+         setMiddleValue(response.data);
+     })
+     .catch((e) => {
+       console.log(e)
+     })
+
+ }) ();
+}
+,[])
+
+const HandleYesNo = (i, d, pp) => {
+  let check = false
+  const newarray = question.map(ss => {
+    if(ss.pp == pp){
+      check = true
+      setQuestion([{...ss, i}]);
+      return;
+    }
+  })
+  if(check){
+    setQuestion([
+      ...question
+    ])
+  }else{
+    setQuestion([
+      ...question,
+      {i,d,pp}
+    ])
+  }
+  
+}
+
+const HandlerSubmit = () => {
+  axios.post('https://bked.logistiex.com/DSQCPickupStart/postReject', {
+    shipmentId : "700000680506",
+    qualityCheckQues : question,
+    AdditionalRemarks : remark
+
+})
+  .then(function (response) {
+      console.log(response.data, "hello");
+  })
+  .catch(function (error) {
+      console.log(error);
+  });
+}
+
+const HandlerSubmits = async() => {
+  await axios.post('https://bked.logistiex.com/DSQCPickupStart/postReject', {
+    shipmentId : "700000680506",
+    qualityCheckQues : question,
+    AdditionalRemarks : remark
+
+})
+  .then(function (response) {
+      console.log(response.data, "hello");
+  })
+  .catch(function (error) {
+      console.log(error);
+  });
+
+  navigation.navigate('Barcode', {
+    Client_Name : route.params.Client_Name,
+    Client_Reference_No : route.params.Client_Reference_No
+  })
+
+}
+
+
+console.log(remark, 'rsdfsdfc')
 
   return (
     <NativeBaseProvider>
@@ -29,14 +111,32 @@ const QCreason = () => {
           justifyContent:"space-evenly",
           marginBottom:20
         }]}>
-          <Text style={styles.text}>Client Name  </Text>
-          <Text style={styles.text}>Client Reference No  </Text>
+          <Text style={styles.text}>{route.params.Client_Name}  </Text>
+          <Text style={styles.text}>{route.params.Client_Reference_No}</Text>
         </View>
         
       </TouchableOpacity>
 
+      {
+        MiddleValue && MiddleValue.details && MiddleValue.details.qualityCheckQues &&
+        MiddleValue.details.qualityCheckQues.map((d, i) => {
+          return (
+            <View key={i} style={[styles.normals, {
+              flexDirection: "row",
+              alignItems:"center",
+              justifyContent:"space-evenly",
+              marginBottom:5
+          }]}>
+              <Text style={styles.text}>{d}  </Text>
+              <Button onPress={() => HandleYesNo('true', d, i)} title='Yes' style={styles.text} />
+              <Button onPress={() => HandleYesNo('false', d, i)} title='No' style={styles.text} />
+            </View>
+          )
+        })
+      }
+
         
-      <View  style={[styles.normals, {
+      {/* <View  style={[styles.normals, {
         flexDirection: "row",
         alignItems:"center",
         justifyContent:"space-evenly",
@@ -89,7 +189,7 @@ const QCreason = () => {
         <Text style={styles.text}>QC question 5  </Text>
         <Text style={styles.text}>Yes  </Text>
         <Text style={styles.text}>No  </Text>
-      </View>
+      </View> */}
      
         <TouchableOpacity>
         <View style={[ {
@@ -97,7 +197,7 @@ const QCreason = () => {
             marginTop:35,
             marginLeft:20
         }]}>
-            <Input placeholder='Additional Remark if any' ></Input>
+            <Input onChangeText={e => setRemark(e)} placeholder='Additional Remark if any' ></Input>
           </View>
 
       </TouchableOpacity>
@@ -109,14 +209,17 @@ const QCreason = () => {
           justifyContent:"space-evenly",
           backgroundColor:"white"
         }]}>
+          <TouchableOpacity onPress={() => HandlerSubmit()} >
           <Text style={[styles.text, {
             backgroundColor:"lightgreen",
             padding:5,
             borderRadius:10,
             fontWeight:"400"
           }]}>Marked QC Reject </Text>
+          </TouchableOpacity>
 
-          <Text style={[styles.text, {
+         <TouchableOpacity onPress={() => HandlerSubmits()} >
+         <Text style={[styles.text, {
             backgroundColor:"lightblue",
             padding:5,
             borderRadius:10,
@@ -125,6 +228,7 @@ const QCreason = () => {
             alignSelf:"center",
             marginLeft:20
           }]}>Mark as QC Done</Text>
+         </TouchableOpacity>
         </View>
         
       </View>

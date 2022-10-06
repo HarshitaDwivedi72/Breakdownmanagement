@@ -5,9 +5,6 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 
-// Client_Reference_No : route.params.Client_Reference_No,
-//             Client_Name : route.params.Client_Name
-
 const Barcode = ({route}) => {
 
   const [barcodeValue, setBarcodeValue] = useState("");
@@ -17,6 +14,7 @@ const Barcode = ({route}) => {
 
   
   const [OTP, setOTP] = useState('');
+  const [OTPs, setOTPs] = useState('');
   
   const generateOTP = () => {
   const characters =
@@ -58,7 +56,7 @@ const sendSmsOtp = async (mobileNumber, otp) => {
 
 const HandlerSubmit = () => {
   axios.post('https://bked.logistiex.com/DSQCPickupStart/postMarkPickup', {
-    QCStatus : true,
+    shipmentId : "700000680506",
     Client_Reference_No : barcodeValue
 
 })
@@ -70,6 +68,18 @@ const HandlerSubmit = () => {
   });
 }
 
+const OTPSubmit = async() => {
+  await fetch(`https://bked.logistiex.com/SMS/OTPValidate?mobileNumber=8955593269&otp=422302`)
+  .then(function (response) {
+      console.log(response.msg, "hello");
+  })
+  .catch(function (error) {
+      console.log(error);
+  });
+
+}
+
+console.log(OTPs, 'asdasdasd');
   
   useEffect(() => {
     if(route.params){
@@ -106,12 +116,12 @@ const HandlerSubmit = () => {
             <TouchableOpacity onPress={() => sendSmsOtp()}>
             <Text style={styles.text2}>Input OTP sent:</Text>
             </TouchableOpacity>
-            <Input  keyboardType='numeric' placeholderTextColor="blue" placeholder="pin" />
+            <Input onChangeText={(e) => setOTPs(e)}  keyboardType='numeric' placeholderTextColor="blue" placeholder="pin" />
           </View>
 
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate('')}>
+      <TouchableOpacity disabled={OTPs.length>0 ? false : true} onPress={OTPSubmit}>
           <View style={[styles.normals, {
             display:"flex",
             alignItems:"center",
@@ -159,7 +169,7 @@ const HandlerSubmit = () => {
 
       </View>
 
-      <TouchableOpacity onPress={() => HandlerSubmit()}>
+      <TouchableOpacity disabled={!barcodeValue} onPress={() => HandlerSubmit()}>
       <View style={[styles.normal, {
         marginTop:10,
         marginBottom:40

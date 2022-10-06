@@ -33,6 +33,8 @@ const Qcrequired = ({route}) => {
  }
 ,[selected])
 
+console.log(MiddleValue, 'sadsdfsdfsdfdsfsds')
+
   return (
     <NativeBaseProvider>
        <Box flex={1} bg="#004aad" alignItems="center">
@@ -141,7 +143,7 @@ const Qcrequired = ({route}) => {
             marginTop:10
           }]}>
             {
-            !MiddleValue.QCStatus ? (
+            MiddleValue.QCStatus ? (
               <Text style={styles.text}>Qc is Required</Text>
                   ) : (
                     <Text style={styles.text}>Qc is not Required</Text>
@@ -174,7 +176,7 @@ const Qcrequired = ({route}) => {
           </TouchableOpacity>
 
 {
-            !MiddleValue.QCStatus ? (
+            MiddleValue.QCStatus ? (
               <TouchableOpacity onPress={() => navigation.navigate('ProductName', {
                 Client_Reference_No : route.params.Client_Reference_No
               })} >

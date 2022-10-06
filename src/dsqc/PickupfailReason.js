@@ -1,24 +1,65 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, NativeBaseProvider, Box } from 'native-base';
 import { Button, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
+import { cond } from 'react-native-reanimated';
+import { Picker } from '@react-native-picker/picker';
 
 const PickupfailReason = ({route}) => {
 
     const initialState = {
-        Pickup_Failure_Reason_1: false,
-        Pickup_Failure_Reason_2: false,
-        Pickup_Failure_Reason_3: false,
-        Pickup_Failure_Reason_4: false,
+        // Pickup_Failure_Reason_1: false,
+        // Pickup_Failure_Reason_2: false,
+        // Pickup_Failure_Reason_3: false,
+        // Pickup_Failure_Reason_4: false,
       };
 
   const navigation = useNavigation();
-  const [isSelected, setSelection] = useState("");
   const [state, setState] = React.useState(initialState);
+  const [MiddleValue, setMiddleValue] = useState([]);
   const [toggleButton, setToggleButton] = React.useState(false);
 
-      console.log(state);
+  const [VehicleTypesss, setVehicleTypesss] = useState('');
+
+      
+
+
+      useEffect(() => 
+      {
+       (async() => {
+         
+       
+           await axios.get(`https://bked.logistiex.com/ADupdatePrams/getUPFR`)
+           .then((response) => {
+     
+               setMiddleValue(response.data);
+           })
+           .catch((e) => {
+             console.log(e)
+           })
+     
+       }) ();
+      }
+     ,[])
+     
+
+
+     const HandlerSubmit = () => {
+      axios.post('https://bked.logistiex.com/DSQCPickupFailed/postFailure', {
+        shipmentId : "700000680503",
+        failureReason : VehicleTypesss
+    
+    })
+      .then(function (response) {
+          console.log(response.data, "hello");
+      })
+      .catch(function (error) {
+          console.log(error);
+      });
+    }
+
 
   return (
     <NativeBaseProvider>
@@ -68,78 +109,51 @@ const PickupfailReason = ({route}) => {
       </TouchableOpacity>
 
       <View style={{color:"black"}}>
-      
-      <View style={styles.checkboxWrapper}>
-      <CheckBox
-        value={state.react}
-        onValueChange={value =>
-          setState({
-            ...state,
-            react: value,
+
+        {/* {
+          MiddleValue.map((d) => {
+            return(
+              <View style={styles.checkboxWrapper}>
+            <CheckBox
+              value={d.pickupFailureReasonName}
+              onValueChange={value =>
+                setState({
+                  ...state,
+                  react: value,
+                })
+              }
+            />
+            <Text style={{color:"black"}}>{d.pickupFailureReasonName}</Text>
+          </View>
+            )
+          })
+        } */}
+
+<View style={{backgroundColor:'grey', height:80}}>
+                <Picker
+        selectedValue={VehicleTypesss}
+        onValueChange={(value, index) => setVehicleTypesss(value)}
+        mode="dropdown" // Android only
+        style={styles.picker}
+      >
+        <Picker.Item label="Please select " value="Unknown" />
+       
+        {
+          MiddleValue.map((d) => {
+            return(
+              <Picker.Item label={d.pickupFailureReasonName} value={d.pickupFailureReasonName} />
+            )
           })
         }
-      />
-      <Text style={{color:"black"}}>Pickup Failure Reason 1</Text>
-    </View>
-    <View style={styles.checkboxWrapper}>
-    <CheckBox
-      value={state.next}
-      onValueChange={value =>
-        setState({
-          ...state,
-          next: value,
-        })
-      }
-    />
-    <Text style={{color:"black"}}>Pickup Failure Reason 2</Text>
-  </View>
-  <View style={styles.checkboxWrapper}>
-    <CheckBox
-      value={state.vue}
-      onValueChange={value =>
-        setState({
-          ...state,
-          vue: value,
-        })
-      }
-    />
-    <Text style={{color:"black"}}>Pickup Failure Reason 3</Text>
-  </View>
-  <View style={styles.checkboxWrapper}>
-    <CheckBox
-      value={state.angular}
-      onValueChange={value =>
-        setState({
-          ...state,
-          angular: value,
-        })
-      }
-    />
-    <Text style={{color:"black"}}>Pickup Failure Reason 4</Text>
-  </View>
+      </Picker>
+</View>
 
       
       </View>
 
-   
-
-    {toggleButton && (
-        <View style={styles.resultContainer}>
-          {Object.entries(state).map(([key, value]) => {
-            return (
-              value && (
-                <View key={key} style={{paddingHorizontal: 5}}>
-                  <Text style={{color:"black"}}>{key}</Text>
-                </View>
-              )
-            );
-          })}
-        </View>
-      )}
-
-
       <Button
-      onPress={() => setToggleButton(toggleButton => !toggleButton)}
+      disabled ={VehicleTypesss.length == 0}
+      onPress={() => HandlerSubmit()}
       title="Submit"
     />
 
@@ -334,5 +348,7 @@ export const styles = StyleSheet.create({
     paddingVertical: 5,
     backgroundColor:"grey"
   },
+
+  
 
 });

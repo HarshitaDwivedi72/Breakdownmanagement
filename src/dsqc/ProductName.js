@@ -18,7 +18,7 @@ const ProductName = ({route}) => {
   (async() => {
     
   
-      await axios.get(`https://bked.logistiex.com/DSQCPickupStart/startPickup?Client_Reference_No=${route.params.Client_Reference_No}`)
+      await axios.get(`https://bked.logistiex.com/DSQCPickupStart/startPickup?shipmentId=700000680506`)
       .then((response) => {
 
           setMiddleValue(response.data.details);
@@ -31,6 +31,7 @@ const ProductName = ({route}) => {
  }
 ,[])
 
+console.log(MiddleValue,'asdasdcasasdasxasxasxd')
 
   return (
     <NativeBaseProvider>
@@ -107,7 +108,10 @@ const ProductName = ({route}) => {
           justifyContent:"space-evenly",
           backgroundColor:"white"
         }]}>
-          <TouchableOpacity onPress={() => navigation.navigate('QCreason')} >
+          <TouchableOpacity onPress={() => navigation.navigate('QCreason',{
+            Client_Reference_No : route.params.Client_Reference_No,
+            Client_Name : MiddleValue.Client_Name
+          })} >
           <Text style={[styles.text, {
             backgroundColor:"lightgreen",
             padding:5,

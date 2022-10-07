@@ -25,6 +25,7 @@ import MasterManifest from './src/dsqc/MasterManifest';
 import TransportManifest from './src/dsqc/TransportManifest';
 import RunSheet from './src/dsqc/RunSheet';
 import CustomerPickup from './src/dsqc/CustomerPickup';
+import MapScreen from './src/dsqc/MapScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -38,6 +39,10 @@ export default function App() {
           />
 
           <Stack.Screen name="Qcrequired" component={Qcrequired} 
+          options={{ title: 'Welcome' }}
+          
+          />
+         <Stack.Screen name="MapScreen" component={MapScreen} 
           options={{ title: 'Welcome' }}
           
           />

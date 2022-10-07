@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Container, NativeBaseProvider, Box } from 'native-base';
+import { Container, NativeBaseProvider, Box, Input } from 'native-base';
 import { StyleSheet, Text, TouchableOpacity, View,ScrollView } from 'react-native';
 import SelectList from 'react-native-dropdown-select-list'
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 
-const CustomerPickup = () => {
+const CustomerPickup = ({}) => {
 
   const [barcodeValue, setBarcodeValue] = useState("");
   const [otp, setOtp] = useState('');
@@ -14,6 +14,7 @@ const CustomerPickup = () => {
   const [data,setData] = useState([]);
   const [headerValue, setHeaderValue] = useState({});
   const [MiddleValue, setMiddleValue] = useState([]);
+  const [keyword, setKeyword] = useState("")
   const navigation = useNavigation();
 
   useEffect(() => 
@@ -21,12 +22,10 @@ const CustomerPickup = () => {
     (async() => {
         await axios.get('https://bked.logistiex.com/DSQCCustomerList/allPincodes?BikerId=BI001')
         .then((response) => {
-          // Store Values in Temporary Array
   
           let newArray = response.data.pincodes.map((item) => {
             return {key:  item, value: item}
           })
-          //Set Data Variable
           setData(newArray)
         })
         .catch((e) => {
@@ -35,10 +34,9 @@ const CustomerPickup = () => {
 
 
 
-        await axios.get(`https://bked.logistiex.com/DSQCCustomerList/returnStatus?CustomerPincode=345678`)
+        await axios.get(`https://bked.logistiex.com/DSQCCustomerList/returnStatus?CustomerPincode=${selected}`)
         .then((response) => {
 
-            // console.log(response.data);
             setHeaderValue(response.data);
         })
         .catch((e) => {
@@ -49,7 +47,6 @@ const CustomerPickup = () => {
         await axios.get(`https://bked.logistiex.com/DSQCCustomerList/customerList?CustomerPincode=${selected}`)
         .then((response) => {
 
-            // console.log(response.data);
             setMiddleValue(response.data.RSData);
         })
         .catch((e) => {
@@ -58,10 +55,12 @@ const CustomerPickup = () => {
 
     }) ();
    }
-  ,[])
-  //  console.log(data, "data");
-  //  console.log(headerValue, "headervale");
-//  console.log(MiddleValue, "hytcng");
+  ,[selected])
+   console.log(MiddleValue, "data");
+
+
+const searched = (keyword) => (c) => c.Customer_Name.includes(keyword);
+
 
   return (
     <NativeBaseProvider>
@@ -139,7 +138,9 @@ const CustomerPickup = () => {
         
       </TouchableOpacity>
 
-      
+      <Input type="search" placeholder='Filter' value={keyword} className="form-control mb-4 container pt-4"
+                onChangeText={(e) => setKeyword(e)}
+                 />
 
         
         <TouchableOpacity>
@@ -155,9 +156,10 @@ const CustomerPickup = () => {
 
         <ScrollView
   contentContainerStyle={{width: '100%', alignItems: 'center'}}>
+
   
   {MiddleValue.length > 0 ? (
-     MiddleValue.map((item, index) => (
+     MiddleValue.filter(searched(keyword)).map((item, index) => (
        <TouchableOpacity key={index}  onPress={() => navigation.navigate("Qcrequired", {
         PinCode : selected,
         pickedShipments : headerValue.returnStatus.pickedShipments,
@@ -182,7 +184,9 @@ const CustomerPickup = () => {
           <Text>
           {item.Client_Name}
           </Text>
-
+          <TouchableOpacity onPress={() => navigation.navigate('MapScreen')} >
+          <Text>navigation</Text>
+          </TouchableOpacity>
         </View>
        </TouchableOpacity>
       ))

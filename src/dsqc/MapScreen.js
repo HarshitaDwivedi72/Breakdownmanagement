@@ -10,7 +10,6 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 
 const MapScreen = ({route}) => {
   enableLatestRenderer();
-  // const mapView = React.createRef();
   const mapRef = useRef(null);
   const [order, setOrder] = useState();
   const [position, setPosition] = useState({
@@ -99,11 +98,10 @@ const MapScreen = ({route}) => {
       />
 
 
-      <View style={styles.inputView}>
+      <View style={{marginBottom:600}}>
       <TextInput 
       style={styles.input}
-      placeholder="Input your location"
-      value={route.params.address}
+      placeholder={route.params.address}
       onChangeText={text => GetLongitudeFromAddress(text)}
       />
   </View>

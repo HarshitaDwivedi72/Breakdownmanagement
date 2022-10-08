@@ -9,7 +9,6 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 
 
 const MapScreen = ({route}) => {
-  console.log(route.params, 'ass')
   enableLatestRenderer();
   // const mapView = React.createRef();
   const mapRef = useRef(null);

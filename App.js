@@ -34,7 +34,11 @@ export default function App() {
      <NavigationContainer>
           <Stack.Navigator>
 
+        
           <Stack.Screen name="CustomerPickup" component={CustomerPickup} 
+          options={{ title: 'Welcome' }}
+          />
+  <Stack.Screen name="Camera" component={Camera} 
           options={{ title: 'Welcome' }}
           />
 
@@ -44,10 +48,7 @@ export default function App() {
           />
          <Stack.Screen name="MapScreen" component={MapScreen} 
           options={{ title: 'Welcome' }}
-          
           />
-         
-
           <Stack.Screen name="DocumentDetailDriver" component={DocumentDetailDriver} 
           options={{ title: 'Welcome' }}
           />
@@ -77,9 +78,7 @@ export default function App() {
           options={{ title: 'Welcome' }}
           />
 
-          <Stack.Screen name="Camera" component={Camera} 
-          options={{ title: 'Welcome' }}
-          />
+         
 
           <Stack.Screen name="NewCamera" component={NewCamera} 
           options={{ title: 'Welcome' }}

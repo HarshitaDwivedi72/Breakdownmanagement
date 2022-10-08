@@ -9,7 +9,7 @@ import { RNCamera } from 'react-native-camera';
 import { useCamera } from 'react-native-camera-hooks';
 import RNFS from 'react-native-fs';
 
-export default function NewCamera() {
+export default function NewCamera({route}) {
 
     const [{ cameraRef }, { takePicture }] = useCamera(null);
 
@@ -18,7 +18,7 @@ export default function NewCamera() {
             const data = await takePicture();
             console.log(data.uri);
             const filePath = data.uri;
-            const newFilePath = RNFS.DownloadDirectoryPath + '/MyTest.jpg';
+            const newFilePath = RNFS.DownloadDirectoryPath + `/DSQC_truck${route.params.value}_${route.params.count}.jpg`;
             RNFS.moveFile(filePath, newFilePath)
                 .then(() => {
                     console.log('IMAGE MOVED',newFilePath);

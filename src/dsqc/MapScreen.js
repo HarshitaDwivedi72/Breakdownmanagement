@@ -8,15 +8,15 @@ import Geolocation from '@react-native-community/geolocation';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
 
-const MapScreen = () => {
-
+const MapScreen = ({route}) => {
+  console.log(route.params, 'ass')
   enableLatestRenderer();
   // const mapView = React.createRef();
   const mapRef = useRef(null);
   const [order, setOrder] = useState();
   const [position, setPosition] = useState({
-    latitude: 10,
-    longitude: 10,
+    latitude: route.params.latitude,
+    longitude: route.params.longitude,
     latitudeDelta: 0.001,
     longitudeDelta: 0.001,
   });
@@ -104,6 +104,7 @@ const MapScreen = () => {
       <TextInput 
       style={styles.input}
       placeholder="Input your location"
+      value={route.params.address}
       onChangeText={text => GetLongitudeFromAddress(text)}
       />
   </View>

@@ -176,7 +176,7 @@ console.log(MiddleValue, 'sadsdfsdfsdfdsfsds')
           </TouchableOpacity>
 
 {
-            MiddleValue.QCStatus ? (
+            !MiddleValue.QCStatus ? (
               <TouchableOpacity onPress={() => navigation.navigate('ProductName', {
                 Client_Reference_No : route.params.Client_Reference_No
               })} >

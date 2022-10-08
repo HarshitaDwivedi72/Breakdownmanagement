@@ -1,29 +1,89 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState, version } from 'react';
 import { Container, NativeBaseProvider, Box } from 'native-base';
-import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Button, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { useNavigation } from '@react-navigation/native';
+import { Picker } from '@react-native-picker/picker';
+import { launchImageLibrary } from 'react-native-image-picker';
+import axios from 'axios';
 
-const Camera = ({route}) => {
+const createFormData = (photo, body = {}) => {
+  const data = new FormData();
+  data.append('file', {
+    name: photo.assets[0].fileName,
+    type: photo.assets[0].type,
+    uri: Platform.OS === 'ios' ? photo.assets[0].uri.replace('file://', '') : photo.assets[0].uri,
+  });
+
+  Object.keys(body).forEach((key) => {
+    data.append(key, body[key]);
+  });
+  
+  return data;
+};
+
+const Camera = ({}) => {
 
   const [barcodeValue, setBarcodeValue] = useState("");
   const [otp, setOtp] = useState('');
   const [showline, setLine] = useState(true)
+  const [MiddleValue, setMiddleValue] = useState([]);
+  const [toggleButton, setToggleButton] = React.useState(false);
+
+  const [VehicleTypesss, setVehicleTypesss] = useState('');
   const navigation = useNavigation();
 
-  // const onDropHandler = (files) => {
-  //   const headers = {
-  //     'Content-Type': 'multipart/form-data'
-  //   }
-  //   let formData = new FormData()
-  //   formData.append('file', files[0])
-  //   API.post('/web/v1.0/upload', {
-  //     formData
-  //   }, {
-  //     headers: headers
-  //   }).then(response => {
-  //     console.log(response.data)
-  //   })
+  const [photo, setPhoto] = React.useState(null);
+  const [count, setcount] = useState(0);
+
+  const handleChoosePhoto = () => {
+    launchImageLibrary({ noData: true }, (response) => {
+      // console.log(response);
+      if (response) {
+        setPhoto(response);
+      }
+    });
+  };
+
+  console.log(photo, 'photo')
+
+  if(photo){
+    const result = createFormData(photo);
+    console.log(result._parts[0], 'sgfdsf')
+  }
+
+  const handleUploadPhoto = async() => {
+    await axios.post(`https://bked.logistiex.com/DSQCPicture/uploadPicture?shipmentId=SI001&userID=UI001&hubFacilityId=HI001&clientReferenceNo=CI001`, {
+      file : createFormData(photo)._parts[0]
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        console.log('response', response);
+      })
+      .catch((error) => {
+        console.log('error', error);
+      });
+  };
+
+
+  useEffect(() => 
+      {
+       (async() => {
+         
+       
+           await axios.get(`https://bked.logistiex.com/ADpics/photosList`)
+           .then((response) => {
+     
+               setMiddleValue(response.data);
+           })
+           .catch((e) => {
+             console.log(e)
+           })
+     
+       }) ();
+      }
+     ,[])
+     
 
 
   return (
@@ -48,26 +108,69 @@ const Camera = ({route}) => {
         
       </TouchableOpacity>
 
+      <View style={{backgroundColor:'grey', height:80}}>
+                <Picker
+        selectedValue={VehicleTypesss}
+        onValueChange={(value, index) => setVehicleTypesss(value)}
+        mode="dropdown" // Android only
+        style={styles.picker}
+      >
+        <Picker.Item label="Please select " value="Unknown" />
+       
+        {
+          MiddleValue.map((d, i) => {
+            return(
+              <Picker.Item key={i} label={d} value={d} />
+            )
+          })
+        }
+      </Picker>
+</View>
+
         
-        <View style={{marginTop:150, marginBottom:150, alignItems:"center",
-        justifyContent:"space-evenly"}} >
-        <Button title='open camera' onPress={() => navigation.navigate('NewCamera')} />
-        
-        </View>
+       {
+        VehicleTypesss.length>0 && VehicleTypesss != 'Unknown' && (
+          <View style={{ alignItems:"center",
+          justifyContent:"space-evenly"}} >
+          <Button title='open camera' onPress={() =>{
+            setcount(count+1);
+             navigation.navigate('NewCamera',{
+              value : VehicleTypesss,
+              count : count
+            })
+  
+          }} />
+          
+          </View>
+        )
+       }
+
+        <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+      {photo && (
+        <>
+          <Image
+            source={{ uri: photo.assets[0].uri }}
+            style={{ width: 300, height: 300 }}
+          />
+          <Button title="Upload Photo" onPress={handleUploadPhoto} />
+        </>
+      )}
+      <Button title="Choose Photo" onPress={handleChoosePhoto} />
+    </View>
 
     
      
-          <TouchableOpacity onPress={() => navigation.navigate('Barcode', {
+          {/* <TouchableOpacity onPress={() => navigation.navigate('Barcode', {
             Client_Reference_No : route.params.Client_Reference_No,
             Client_Name : route.params.Client_Name
           })}>
           <View style={[styles.normal, {
             marginTop:10,
             marginBottom:40
-          }]}>
+          }]}> */}
             <Text style={styles.text}>Next</Text>
-          </View>
-        </TouchableOpacity>
+          {/* </View>
+        </TouchableOpacity> */}
 
 
       <TouchableOpacity style={{justifyContent:"center"}} onPress={() => navigation.navigate('')}>

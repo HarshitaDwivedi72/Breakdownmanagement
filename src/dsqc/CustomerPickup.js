@@ -17,6 +17,9 @@ const CustomerPickup = ({}) => {
   const [keyword, setKeyword] = useState("")
   const navigation = useNavigation();
 
+  const [inputValue, setInputValue] = useState('9999999999');
+ 
+  
   useEffect(() => 
    {
     (async() => {
@@ -44,7 +47,7 @@ const CustomerPickup = ({}) => {
         })
 
 
-        await axios.get(`https://bked.logistiex.com/DSQCCustomerList/customerList?CustomerPincode=${selected}`)
+        await axios.get(`https://bked.logistiex.com/DSQCCustomerList/customerList?CustomerPincode=123456`)
         .then((response) => {
 
             setMiddleValue(response.data.RSData);
@@ -184,11 +187,17 @@ const searched = (keyword) => (c) => c.Customer_Name.includes(keyword);
           <Text>
           {item.Client_Name}
           </Text>
-          <TouchableOpacity onPress={() => navigation.navigate('MapScreen')} >
+          <TouchableOpacity onPress={() => navigation.navigate('MapScreen',{
+            latitude : item.ConsignorLatitude,
+            longitude : item.ConsignorLongitude,
+            address : item.Customer_Address
+          })} >
           <Text>navigation</Text>
           </TouchableOpacity>
+        
         </View>
        </TouchableOpacity>
+       
       ))
   ) : (
     <Text>dscfsdf</Text>

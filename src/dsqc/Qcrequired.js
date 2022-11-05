@@ -20,7 +20,7 @@ const Qcrequired = ({route}) => {
   (async() => {
     
   
-      await axios.get(`https://bked.logistiex.com/DSQCOrderInfo/orderInfo?Client_Reference_No=${route.params.Client_Reference_No}`)
+      await axios.get(`https://bked.logistiex.com/DSQCOrderInfo/orderInfo?shipmentId=700000680505`)
       .then((response) => {
 
           setMiddleValue(response.data.details);

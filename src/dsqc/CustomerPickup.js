@@ -5,15 +5,15 @@ import SelectList from 'react-native-dropdown-select-list'
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 
-const CustomerPickup = ({}) => {
+const CustomerPickup = () => {
 
   const [barcodeValue, setBarcodeValue] = useState("");
   const [otp, setOtp] = useState('');
   const [showline, setLine] = useState(true)
-  const [selected, setSelected] = useState("345678");
+  const [selected, setSelected] = useState("123456");
   const [data,setData] = useState([]);
   const [headerValue, setHeaderValue] = useState({});
-  const [MiddleValue, setMiddleValue] = useState([]);
+  const [MiddleValue, setMiddleValue] = useState([{}]);
   const [keyword, setKeyword] = useState("")
   const navigation = useNavigation();
 
@@ -47,7 +47,7 @@ const CustomerPickup = ({}) => {
         })
 
 
-        await axios.get(`https://bked.logistiex.com/DSQCCustomerList/customerList?CustomerPincode=123456`)
+        await axios.get(`https://bked.logistiex.com/DSQCCustomerList/customerList?CustomerPincode=110032`)
         .then((response) => {
 
             setMiddleValue(response.data.RSData);
@@ -59,11 +59,14 @@ const CustomerPickup = ({}) => {
     }) ();
    }
   ,[selected])
-   console.log(MiddleValue, "data");
 
 
-const searched = (keyword) => (c) => c.Customer_Name.includes(keyword);
-
+const searched = (keyword) => (c) => {
+    let f = c.Customer_Name + c.Client_Reference_No;
+    return(
+      f.includes(keyword)
+    )
+}
 
   return (
     <NativeBaseProvider>
@@ -161,7 +164,7 @@ const searched = (keyword) => (c) => c.Customer_Name.includes(keyword);
   contentContainerStyle={{width: '100%', alignItems: 'center'}}>
 
   
-  {MiddleValue.length > 0 ? (
+  {MiddleValue && MiddleValue.length > 0 ? (
      MiddleValue.filter(searched(keyword)).map((item, index) => (
        <TouchableOpacity key={index}  onPress={() => navigation.navigate("Qcrequired", {
         PinCode : selected,
@@ -198,7 +201,8 @@ const searched = (keyword) => (c) => c.Customer_Name.includes(keyword);
         </View>
        </TouchableOpacity>
        
-      ))
+      )
+      )
   ) : (
     <Text>dscfsdf</Text>
   )}

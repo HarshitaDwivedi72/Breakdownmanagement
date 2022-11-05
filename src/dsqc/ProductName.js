@@ -10,7 +10,15 @@ const ProductName = ({route}) => {
   const [barcodeValue, setBarcodeValue] = useState("");
   const [otp, setOtp] = useState('');
   const [showline, setLine] = useState(true)
-  const [MiddleValue, setMiddleValue] = useState([]);
+  const [MiddleValue, setMiddleValue] = useState({
+    "Client_Name": "CC000100023",
+    "Client_Reference_No": "CRI700000680506",
+    "productName": "Mobile",
+    "brand": "Samsung",
+    "price": "7000",
+    "category": "Electronic",
+    "size": "68X56X45"
+    });
   const navigation = useNavigation();
 
   useEffect(() => 
@@ -31,7 +39,6 @@ const ProductName = ({route}) => {
  }
 ,[])
 
-console.log(MiddleValue,'asdasdcasasdasxasxasxd')
 
   return (
     <NativeBaseProvider>

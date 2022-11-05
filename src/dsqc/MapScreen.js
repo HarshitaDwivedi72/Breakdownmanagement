@@ -4,40 +4,79 @@ import { TouchableOpacity, PermissionsAndroid } from 'react-native';
 import { StyleSheet, Text, View } from 'react-native'
 import {enableLatestRenderer, Marker} from 'react-native-maps';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'; 
-import Geolocation from '@react-native-community/geolocation';
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+
+import GetLocation from 'react-native-get-location';
+import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
 
 
 const MapScreen = ({route}) => {
   enableLatestRenderer();
   const mapRef = useRef(null);
   const [order, setOrder] = useState();
+  const [texts, settexts] = useState();
   const [position, setPosition] = useState({
     latitude: route.params.latitude,
     longitude: route.params.longitude,
-    latitudeDelta: 0.001,
-    longitudeDelta: 0.001,
+    latitudeDelta: 1,
+    longitudeDelta: 1,
   });
+
+
+  useEffect(() => {
+    if(route.params && route.params.latitude && route.params.longitude){
+      setPosition({
+        latitude : route.params.latitude,
+        longitude : route.params.longitude,
+        latitudeDelta : 1,
+        longitudeDelta : 1
+      })
+    }
+    else if(route.params && route.params.address){
+      GetLongitudeFromAddress(route.params.address);
+    }
+  }, []);
 
   console.log(position);
 
+  useEffect(() => {
+    mapRef.current.animateToRegion(position, 3*1000);
+  },[position]);
+
+
   const current_location = () => {
-        Geolocation.getCurrentPosition((pos) => {
-          const crd = pos.coords;
-          setPosition({
-            latitude: crd.latitude,
-            longitude: crd.longitude,
-            latitudeDelta: 0.0421,
-            longitudeDelta: 0.0421,
-          });
-        }).catch((err) => {
-      },{
+
+    return GetLocation.getCurrentPosition({
         enableHighAccuracy: true,
-        timeout: 20000,
-        maximumAge : 2000
-      })
-      mapRef.current.animateToRegion(position, 3*1000);
-  }
+        timeout: 10000,
+    })
+    .then(latestLocation => {
+        console.log('latest location '+JSON.stringify(latestLocation))
+        return latestLocation;
+    }).then(location => {
+        const currentLoc = { latitude: location.latitude, longitude: location.longitude };
+        return currentLoc;
+    }).then(currentLoc => {      
+      setPosition({
+        latitude: currentLoc.latitude,
+        longitude: currentLoc.longitude,
+        latitudeDelta: 1,
+        longitudeDelta: 1,
+      });  
+      
+        return currentLoc;
+    }).catch(error => {
+        RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({
+            interval: 10000,
+            fastInterval: 5000,
+        })
+        .then(status=>{
+            if(status)
+                console.log('Location enabled');
+        }).catch(err=>{
+        })
+        return false;
+    })
+};
 
   const GetLongitudeFromAddress = (address) =>{
     var logLatApi = 'https://maps.googleapis.com/maps/api/geocode/json?address='+address+'&sensor=false&key=AIzaSyCQckZTP5hiP_wozcqIM6IU_9BgOozNJeo';
@@ -57,11 +96,10 @@ const MapScreen = ({route}) => {
           setPosition({
             latitude: responseJson.results[0].geometry.location.lat,
             longitude: responseJson.results[0].geometry.location.lng,
-            latitudeDelta: 0.0421,
-            longitudeDelta: 0.0421,
+            latitudeDelta: 1,
+            longitudeDelta: 1,
           });
         }
-        mapRef.current.animateToRegion(position, 3*1000);
     }).catch(err => console.log(err));
 }
   
@@ -98,12 +136,13 @@ const MapScreen = ({route}) => {
       />
 
 
-      <View style={{marginBottom:600}}>
+      <View style={{marginBottom:550}}>
       <TextInput 
       style={styles.input}
       placeholder={route.params.address}
-      onChangeText={text => GetLongitudeFromAddress(text)}
+      onChangeText={text => settexts(text)}
       />
+      <Button title='search' onPress={() => GetLongitudeFromAddress(texts)} />
   </View>
 
      </View>

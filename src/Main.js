@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { Text, 
   StyleSheet, 
   TouchableOpacity, 
@@ -17,44 +17,35 @@ import { Container,
 
 import { useNavigation } from '@react-navigation/native';
   
-
-
-
+const getData = "https://bked.logistiex.com/SellerMainScreen/getMSD/Tarun123";
 
 const Main = () => {
 
-  // const[data, setData] = React.useState({"SellerDeliveries":"Required","CustomerDeliveries":["1012"]});
-  // const[seconddata, setSeconddata] = React.useState({"SellerDeliveries":"Required","CustomerDeliveries":["1012"]});
+  const[data, setData] = useState({});
+  const [count, setcount] = useState(0);
 
   const navigation = useNavigation();
-  //   const apis = 'https://bked.logistiex.com/LMApp/getMSD/Ronit';
-  //   const secapis = 'https://bked.logistiex.com/SellerMainScreen/getMSD/Tarun123'
-  // //GET data 'url' for Delivery and Pickup Count,
-  // useEffect(() => {
-  //   axios.get(apis)
-  //   .then((response) => {
-  //     setData(response.data)
- 
-  //    }, (error) => {
-  //       alert(error);
-  //  }); 
 
-  //  axios.get(secapis)
-  //  .then((response) => {
-  //   setSeconddata(response.data)
-
-  //   }, (error) => {
-  //      alert(error);
-  // }); 
+  useEffect(() => 
+  {
+   (async() => {
+       await axios.get(getData)
+       .then((res) => {
+           setData(res.data)
+           if(res.data && res.data.consignorPickupsList){
+            const all = res.data.consignorPickupsList;
+            setcount(all.length);
+          }
+   }, (error) => {
+       alert(error);
+   }); 
+   }) ();
+  }
+ ,[]);
 
 
-  // }, []);
-//   console.log(Object.keys(data.CustomerDeliveries).length);
 
   return (
-
-    //Native Base based Main Screen With a Logout Button 
-
     <NativeBaseProvider>
      <Box flex={1} bg="#004aad" alignItems="center" justifyContent="center">
      	<Box justifyContent="space-between" py={8} px={0}  bg="#fff" rounded="xl" width={375} maxWidth="100%">
@@ -79,6 +70,7 @@ const Main = () => {
       <TouchableOpacity  onPress={()=>navigation.navigate('NewSellerPickup')}>
       <View style={styles.normal}>
         <Text style={styles.text}>Seller Pickups </Text>
+        <Text style={styles.text}>{count}</Text>
       </View>
       </TouchableOpacity>
       

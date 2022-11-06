@@ -1,14 +1,12 @@
 import { Container,ArrowForwardIcon, NativeBaseProvider, 
   Box, 
   Image,
-  Center } from 'native-base';
+  Center, 
+  Button} from 'native-base';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import{StyleSheet,Text,TouchableOpacity,View, ScrollView, TextInput,getPick} from 'react-native';
-// import { getPickup } from '../Config';
 import { useNavigation } from '@react-navigation/native';
-import DropDownPicker from 'react-native-dropdown-picker';
-import { Picker } from '@react-native-picker/picker';
 
 
 const Reject = () => {
@@ -66,24 +64,9 @@ const Reject = () => {
         <View style={styles.bt3}>
 
 
-        <Picker
-      selectedValue={DropDownValue}
-      onValueChange={(value, index) => setDropDownValue(value)}
-      mode="dropdown" // Android only
-      style={styles.picker}
-    >
-      <Picker.Item label="Please select " value="Unknown" />
-     
-      {
-        DriverData.map((d) => {
-          return(
-            <Picker.Item value={d.pickupFailureReasonGroupName} label={d.pickupFailureReasonName} key={d.pickupFailureReasonUserID}/>
-          )
-        })
-      }
-    </Picker>
-
-
+          <Button>Damaged shipment</Button>
+          <Button>wrong packing</Button>
+          <Button>empty parcel</Button>
 
         </View>
       </TouchableOpacity >

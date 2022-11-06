@@ -17,6 +17,7 @@ const ShipmentBarcode = ({route}) => {
     const [barcodeValue,setBarcodeValue] = useState("");
     const [packageValue,setpackageValue] = useState("");
     const [otp,setOtp] = useState('');
+    const [flag, setflag] = useState(true);
     const [showModal, setShowModal] = useState(false)
     const [refresh, setRefresh] = useState(false)
     const [pending, setPending] = useState(0)
@@ -24,10 +25,33 @@ const ShipmentBarcode = ({route}) => {
     const [accepted, setAccepted] = useState(0)
     const [rejected, setRejected] = useState(0);  
     const [valuedekho, setvaluedekho] = useState('tanmay');
+    const getData = "https://bked.logistiex.com/SellerMainScreen/getMSD/Tarun123";
 
     const navigation = useNavigation();
 
+    const[data, setData] = useState();
+    const [count, setcount] = useState(0);
+    
+    useEffect(() => 
+    {
+     (async() => {
+         await axios.get(getData)
+         .then((res) => {
+             if(res.data && res.data.consignorPickupsList){
+              const all = res.data.consignorPickupsList;
+              setcount(all.length);
+              setData(all);
+              console.log(all, 'asdasdasdasd')
+            }
+     }, (error) => {
+         alert(error);
+     }); 
+     }) ();
+    }
+   ,[])
+  
 
+console.log(data, 'asdasd')
     
     useEffect(()=>{
         axios.get(postScan)
@@ -44,17 +68,24 @@ const ShipmentBarcode = ({route}) => {
 
 
     useEffect(() => {
-      if(route.params  && valuedekho === 'shipment'){
-        setBarcodeValue(route.params.barcode);
+      if(route.params  && valuedekho === 'shipment' && data && data.length > 0){
+        data.forEach(element => {
+          if(element == route.params.barcode){
+            console.log(element,'element')
+            setBarcodeValue(route.params.barcode);
+            setflag(false)
+          }
+        });
+        if(flag){
+          alert('Please correct shipment id')
+        }
       }
       if(route.params  && valuedekho === 'package'){
         setpackageValue(route.params.barcode)
       }
     }, [barcodeValue, route]);
 
-console.log(valuedekho, 'sdfsdfsdf')
 
-// for otp
 const reSendHandle=()=>{
 console.log(otp)
 
@@ -70,10 +101,6 @@ console.log(otp)
       console.log(error);
     });
 }
-
-    //POST Backend API
-
-
 
    const onSuccess = e => {
         console.log(e.data)
@@ -137,26 +164,26 @@ console.log(otp)
 
       <TouchableOpacity onPress={()=>navigation.navigate('reject')}>
               <View style={styles.btn} >
-                 <Text style={styles.btntext}>    Reject Shipment       </Text>
+                 <Text style={styles.btntext}>Reject Shipment</Text>
               </View>
     </TouchableOpacity>
       
       <View style={styles.mainbox}>
              <View style={styles.smallbox}>
                 <Text style={styles.text1}>Expected</Text>
-                <Text style={styles.text1}>{expected}</Text>
+                <Text style={styles.text1}>{count}</Text>
               </View>
               <View style={styles.smallbox}>
                 <Text style={styles.text2}>Accepted</Text>
-                <Text style={styles.text2}>{accepted}</Text>
+                <Text style={styles.text2}>{0}</Text>
               </View>
               <View style={styles.smallbox}>
                 <Text style={styles.text3}>Rejected</Text>
-                <Text style={styles.text3}>{rejected}</Text>
+                <Text style={styles.text3}>{0}</Text>
               </View>
               <View style={styles.smallbox}>
                 <Text style={styles.text3}>Not Handed Over</Text>
-                <Text style={styles.text3}>{pending}</Text>
+                <Text style={styles.text3}>{0}</Text>
               </View>
             </View>
             

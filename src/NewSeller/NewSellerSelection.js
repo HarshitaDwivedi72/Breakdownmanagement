@@ -9,14 +9,13 @@ import axios from 'axios';
 const NewSellerSelection = ({route}) => {
     const [barcodeValue,setBarcodeValue] = useState("");
     const [showline, setLine] = useState(true)
-    // const navigation = useNavigation();
 
     const [data,setData] = useState([]);
     const [order, setOrder] = useState([]);
+    const [newdata, setnewdata] = useState([]);
     const [type,setType] = useState('delivery');
     const navigation = useNavigation();
     console.log(route.params.paramKey, 'dascsdc');
-
     const triggerCall=() =>{
 
         const args = {
@@ -32,12 +31,10 @@ const NewSellerSelection = ({route}) => {
     (async() => {
         await axios.get(`https://bked.logistiex.com/SellerMainScreen/getSellerDetails/second001`)
         .then((res) => {
-            setData(res.data)
+            setnewdata([res.data]);
     }, (error) => {
         alert(error);
     }); 
-
-
 
         await axios.get('https://bked.logistiex.com/SellerMainScreen/getCP/Tarun123')
         .then((res) => {
@@ -50,13 +47,6 @@ const NewSellerSelection = ({route}) => {
    }
   ,[])
 
-
-  
-
-    var new_data = [];
-    new_data.push(data);
-
-    console.log(new_data, 'sadcsdc');
     var TotalpickUp;
     var CompletePickUp;
    if(order.length){
@@ -98,11 +88,11 @@ const NewSellerSelection = ({route}) => {
                     <TouchableOpacity>
                       <View style={styles.innerdown}>
                           <Text style={styles.fontvalue}>Seller Name</Text>
-                          <Text style={styles.fontvalue}>{}</Text>
+                          <Text style={styles.fontvalue}>{newdata.length > 0 ? newdata[0].consignorDetails.consignorName : 0}</Text>
                       </View>
                       <View style={styles.innerdown}>
                           <Text style={styles.fontvalue}>Seller Address</Text>
-                          <Text style={styles.fontvalue}>{}</Text>
+                          <Text style={styles.fontvalue}>{newdata.length > 0 ? newdata[0].consignorDetails.consignorAddress1 : 0}, {newdata.length > 0 ? newdata[0].consignorDetails.consignorAddress2 : 0} </Text>
                       </View>
                     </TouchableOpacity>
                     <View style={styles.outerdown}>

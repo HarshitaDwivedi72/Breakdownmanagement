@@ -1,0 +1,99 @@
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import {
+  StyleSheet,
+  View,
+  Text,
+} from 'react-native';
+import Pie from 'react-native-pie';
+import { getGraph } from './Config';
+ 
+const Graph = (props) =>{
+    const [pending,setPending] = useState(100);
+    const [complete,setComplete] = useState(0);
+    const [cancel,setCancel] = useState(0);
+    const [filter,setFilter] = useState('Delivery');
+    useEffect(()=>{
+        axios.get(`${getGraph}${filter}`)
+            .then((res) => {
+                console.log(res.data)
+                var total = res.data.pending + res.data.completed + res.data.cancelled;
+                console.log(total)
+                setPending((res.data.pending*100)/total);
+                setComplete((res.data.completed*100)/total);
+                setCancel((res.data.cancelled*100)/total);
+        }, (error) => {
+            // alert(error);
+        }); 
+    },[])
+    console.log(pending,complete,cancel)
+    return (
+           <View
+            style={{
+              paddingVertical: 15,
+              flexDirection: 'row',
+              width: 180,
+              justifyContent: 'space-between',
+              alignSelf:'center',
+              alignItems:'center',
+            }}
+          >
+          
+   {true && <Pie
+              style={{alignSelf:'center',marginLeft:50}}
+              radius={70}
+              innerRadius={50}
+              sections={[
+                {
+                  percentage: pending,
+                  color: '#004aad',
+                },
+                {
+                  percentage: 100-pending,
+                  color: '#d4d4d4',
+                },
+              ]}
+              strokeCap={'butt'}
+            />}
+   {false && <Pie
+              style={{alignSelf:'center',marginLeft:50}}
+              radius={80}
+              innerRadius={50}
+              sections={[
+                {
+                  percentage: complete,
+                  color: '#004aad',
+                },
+                {
+                  percentage: 100-complete,
+                  color: '#d4d4d4',
+                },
+              ]}
+              strokeCap={'butt'}
+            />}
+          </View>
+    )
+  
+}
+
+export default Graph;
+ 
+const styles = StyleSheet.create({
+  container: { 
+    alignItems: 'center', 
+    justifyContent: 'center', 
+    height: 1050
+  },
+  gauge: {
+    position: 'absolute',
+    width: 100,
+    height: 160,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  gaugeText: {
+    backgroundColor: 'transparent',
+    color: '#000',
+    fontSize: 24,
+  },
+})

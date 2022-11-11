@@ -3,8 +3,7 @@ import{StyleSheet,Text,TouchableOpacity,View, ScrollView, TextInput,getPick, Ale
 import call from 'react-native-phone-call';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
-
-
+import Graph from '../Graph'
 
 const NewSellerSelection = ({route}) => {
     const [barcodeValue,setBarcodeValue] = useState("");
@@ -13,7 +12,7 @@ const NewSellerSelection = ({route}) => {
     const [data,setData] = useState([]);
     const [order, setOrder] = useState([]);
     const [newdata, setnewdata] = useState([]);
-    const [type,setType] = useState('delivery');
+    const [type,setType] = useState('');
     const navigation = useNavigation();
     console.log(route.params.paramKey, 'dascsdc');
     const triggerCall=() =>{
@@ -29,7 +28,7 @@ const NewSellerSelection = ({route}) => {
     useEffect(() => 
    {
     (async() => {
-        await axios.get(`https://bked.logistiex.com/SellerMainScreen/getSellerDetails/second001`)
+        await axios.get(`https://bked.logistiex.com/SellerMainScreen/getSellerDetails/first005 `)
         .then((res) => {
             setnewdata([res.data]);
     }, (error) => {
@@ -58,7 +57,22 @@ const NewSellerSelection = ({route}) => {
    console.log(TotalpickUp - CompletePickUp );
    let net = TotalpickUp - CompletePickUp;
 
-    return (
+   
+   useEffect(() => {
+    let addresss = "";
+    if(newdata.length > 0 ){
+      addresss += newdata[0].consignorDetails.consignorAddress1;
+      addresss += " ";
+      addresss += newdata[0].consignorDetails.consignorAddress2;
+      addresss += " ";
+      addresss += newdata[0].consignorDetails.consignorCity
+     } 
+     setType(addresss);
+   }, [newdata]);
+
+   
+
+   return (
     <View>
     
     <TouchableOpacity onPress={()=>navigation.navigate('reject')}>
@@ -66,6 +80,9 @@ const NewSellerSelection = ({route}) => {
                  <Text style={styles.text}>Seller Pickups  (Completed/Total) </Text>
               </View>
     </TouchableOpacity>
+    <View>
+      <Graph />
+    </View>
     <View style={styles.containter}>
          <ScrollView style={styles.homepage} showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false}>
       {/* <View style={styles.searchbar}> 
@@ -92,19 +109,28 @@ const NewSellerSelection = ({route}) => {
                       </View>
                       <View style={styles.innerdown}>
                           <Text style={styles.fontvalue}>Seller Address</Text>
-                          <Text style={styles.fontvalue}>{newdata.length > 0 ? newdata[0].consignorDetails.consignorAddress1 : 0}, {newdata.length > 0 ? newdata[0].consignorDetails.consignorAddress2 : 0} </Text>
+                          <Text style={styles.fontvalue}>{newdata.length > 0 ? newdata[0].consignorDetails.consignorAddress1 : 0}, {newdata.length > 0 ? newdata[0].consignorDetails.consignorAddress2 : 0}, {newdata.length > 0 ? newdata[0].consignorDetails.consignorCity : 0} </Text>
                       </View>
                     </TouchableOpacity>
                     <View style={styles.outerdown}>
                       <View style={styles.outer1}><Text style={{color:'#6DB1E1',fontWeight:'700'}} onPress={triggerCall}>Call Seller</Text></View>
+
+                      <TouchableOpacity onPress={() => navigation.navigate('MapScreen', {
+                        address : type,
+                        latitude : 0,
+                        longitude : 0
+                      })} >
                       <View style={styles.outer1}><Text style={{color:'#6DB1E1',fontWeight:'700'}}>Get Direction</Text></View>
+                      </TouchableOpacity>
                   </View>
               </View>
     </View>
      
      </ScrollView>
 
-     <TouchableOpacity onPress={()=>navigation.navigate('ShipmentBarcode')}>
+     <TouchableOpacity onPress={()=>navigation.navigate('ShipmentBarcode',{
+      Forward : route.params.Forward
+     })}>
       	
       		<View style={styles.bt1}>
                    {/* <FontAwesomeIcon icon={faQrcode } color="black" size={25} style={{marginLeft:8,marginTop:8}} /> */}

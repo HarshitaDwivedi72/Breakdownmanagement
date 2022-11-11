@@ -82,7 +82,8 @@ const NewSellerPickup = () => {
           {data.map((single, i)=>(
           
           <TouchableOpacity key={i}  style={styles.mainbox} onPress={()=> navigation.navigate('NewSellerSelection',{
-              paramKey : single.consignorCode
+              paramKey : single.consignorCode,
+              Forward : single.ForwardPickups
           })}>
            
             <View style={styles.innerdown}>

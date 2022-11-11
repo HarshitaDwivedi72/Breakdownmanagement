@@ -16,13 +16,42 @@ import { Container,
   Center} from 'native-base';
 
 import { useNavigation } from '@react-navigation/native';
+import CSVWrite from "./CSVWrite";
   
 const getData = "https://bked.logistiex.com/SellerMainScreen/getMSD/Tarun123";
+
 
 const Main = () => {
 
   const[data, setData] = useState({});
-  const [count, setcount] = useState(0);
+  const [count, setcount] = useState(12);
+
+  const create =()=>{
+
+    const c = new Date().getDate();
+    const d =  new Date().getMonth() +1
+    const e = new Date().getFullYear()
+    const f = c+'.'+d+'.'+e 
+    const values =r;
+     
+      const csvString = JSON.stringify(values);
+  
+      var RNFS = require('react-native-fs');
+      
+  
+      var path1 = RNFS.DownloadDirectoryPath  + '/' + f+ '.json';
+  
+      RNFS.writeFile(path1, csvString, 'utf8')
+        .then((success) => {
+          console.log('FILE WRITTEN!', values);
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });  
+  }
+  
+  let r = [];
+  r = data;
 
   const navigation = useNavigation();
 
@@ -33,6 +62,8 @@ const Main = () => {
        .then((res) => {
            setData(res.data)
            if(res.data && res.data.consignorPickupsList){
+            r = [...res.data.consignorPickupsList]
+            create()
             const all = res.data.consignorPickupsList;
             setcount(all.length);
           }

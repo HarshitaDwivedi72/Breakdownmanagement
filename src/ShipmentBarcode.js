@@ -32,24 +32,45 @@ const ShipmentBarcode = ({route}) => {
     const[data, setData] = useState();
     const [count, setcount] = useState(0);
     
-    useEffect(() => 
-    {
-     (async() => {
-         await axios.get(getData)
-         .then((res) => {
-             if(res.data && res.data.consignorPickupsList){
-              const all = res.data.consignorPickupsList;
-              setcount(all.length);
-              setData(all);
-              console.log(all, 'asdasdasdasd')
-            }
-     }, (error) => {
-         alert(error);
-     }); 
-     }) ();
-    }
-   ,[])
+  //   useEffect(() => 
+  //   {
+  //    (async() => {
+  //        await axios.get(getData)
+  //        .then((res) => {
+  //            if(res.data && res.data.consignorPickupsList){
+  //             const all = res.data.consignorPickupsList;
+  //             setcount(all.length);
+  //             setData(all);
+  //             console.log(all, 'asdasdasdasd')
+  //           }
+  //    }, (error) => {
+  //        alert(error);
+  //    }); 
+  //    }) ();
+  //   }
+  //  ,[])
   
+  useEffect(() => {
+    const c = new Date().getDate();
+  const d = new Date().getMonth() + 1
+  const e = new Date().getFullYear()
+  const f = c + '.' + d + '.' + e
+
+  var RNFS = require('react-native-fs');
+
+  var path1 = RNFS.DownloadDirectoryPath + '/' + f + '.json';
+
+  RNFS.readFile(path1, 'utf8')
+    .then((success) => {
+      console.log('FILE READ!');
+      const new_data = JSON.parse(success);
+      setData(new_data);
+    })
+
+    .catch((err) => {
+      console.log(err.message);
+    });
+  }, []);
 
 console.log(data, 'asdasd')
     
@@ -171,7 +192,7 @@ console.log(otp)
       <View style={styles.mainbox}>
              <View style={styles.smallbox}>
                 <Text style={styles.text1}>Expected</Text>
-                <Text style={styles.text1}>{count}</Text>
+                <Text style={styles.text1}>{route.params.Forward}</Text>
               </View>
               <View style={styles.smallbox}>
                 <Text style={styles.text2}>Accepted</Text>

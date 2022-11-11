@@ -11,7 +11,9 @@ import NewSellerPickup from './src/NewSeller/NewSellerPickup'
 import Reject from './src/NewSeller/RejectReason'
 import ShipmentBarcode from './src/ShipmentBarcode'
 import NewBarcode from './src/NewBarcode';
-
+import CSVWrite from './src/CSVWrite';
+import Graph from './src/Graph';
+import MapScreen from './src/dsqc/MapScreen';
 
 const Stack = createStackNavigator();
 
@@ -21,6 +23,16 @@ function App() {
     <NativeBaseProvider>
       <NavigationContainer>
         <Stack.Navigator initialRouteName={'Main'}>
+
+        <Stack.Screen name="Graph" component={Graph}
+            options={{
+              header: () => null
+        }} />
+
+        <Stack.Screen name="CSVWrite" component={CSVWrite}
+            options={{
+              header: () => null
+        }} />
 
           <Stack.Screen name="Login" component={Login}
             options={{
@@ -42,6 +54,11 @@ function App() {
             header: () => null
           }} />
             <Stack.Screen name="ShipmentBarcode" component={ShipmentBarcode} 
+           options={{
+            header: () => null
+          }} />
+
+<Stack.Screen name="MapScreen" component={MapScreen} 
            options={{
             header: () => null
           }} />

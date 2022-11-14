@@ -3,7 +3,8 @@ import {
   NativeBaseProvider, 
   Box, 
   Image,
-  Center } from 'native-base';
+  Center, 
+  Input} from 'native-base';
 
 import{
 StyleSheet,
@@ -21,8 +22,16 @@ import { useNavigation } from '@react-navigation/native';
 
 const getData = "https://bked.logistiex.com/SellerMainScreen/getSellerList/Tarun123";
 
-const NewSellerPickup = () => {
+const NewSellerPickup = ({route}) => {
   const [data,setData] = useState([]);
+  const [barcodeValue, setBarcodeValue] = useState("");
+  const [otp, setOtp] = useState('');
+  const [showline, setLine] = useState(true)
+  const [selected, setSelected] = useState("123456");
+  const [headerValue, setHeaderValue] = useState({});
+  const [MiddleValue, setMiddleValue] = useState([{}]);
+  const [keyword, setKeyword] = useState("")
+
   const navigation = useNavigation();
   useEffect(()=>{
       axios.get(getData)
@@ -46,6 +55,15 @@ const NewSellerPickup = () => {
    }
   ,[])
 
+  
+const searched = (keyword) => (c) => {
+  let f = c.consignorName;
+  return(
+    f.includes(keyword)
+  )
+}
+
+
 
 
   return (
@@ -57,7 +75,7 @@ const NewSellerPickup = () => {
 
           <TouchableOpacity>
            <View style={styles.normal}>
-               <Text style={styles.text}>Seller Pickups  (Completed/Total) {data.deliveries}</Text>
+               <Text style={styles.text}>Seller Pickups {route.params.count}</Text>
            </View>
           </TouchableOpacity>
           <View style={styles.searchbar}> 
@@ -78,8 +96,12 @@ const NewSellerPickup = () => {
            
           </View>   
 
+          <Input type="search" placeholder='Filter' value={keyword} className="form-control mb-4 container pt-4"
+                onChangeText={(e) => setKeyword(e)}
+                 />
+
         <ScrollView style={styles.homepage} showsVerticalScrollIndicator={true} showsHorizontalScrollIndicator={false}>
-          {data.map((single, i)=>(
+          {/* {data.map((single, i)=>(
           
           <TouchableOpacity key={i}  style={styles.mainbox} onPress={()=> navigation.navigate('NewSellerSelection',{
               paramKey : single.consignorCode,
@@ -94,7 +116,28 @@ const NewSellerPickup = () => {
               <Text style={styles.fontvalue}>{single.ReverseDeliveries}</Text>              
             </View>
           </TouchableOpacity>
-      ))}
+      ))} */}
+
+{data && data.length > 0 ? (
+     data.filter(searched(keyword)).map((single, i) => (
+      <TouchableOpacity key={i}  style={styles.mainbox} onPress={()=> navigation.navigate('NewSellerSelection',{
+        paramKey : single.consignorCode,
+        Forward : single.ForwardPickups
+    })}>
+      <View style={styles.innerdown}>
+        <Text style={styles.fontvalue}>{single.consignorName}</Text>
+        
+        <Text style={styles.fontvalue}>{single.ForwardPickups}</Text>
+        
+        <Text style={styles.fontvalue}>{single.ReverseDeliveries}</Text>              
+      </View>
+    </TouchableOpacity>
+       
+      )
+      )
+  ) : (
+    <Text>dscfsdf</Text>
+  )}
           
         </ScrollView>
 

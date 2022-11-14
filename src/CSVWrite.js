@@ -12,7 +12,7 @@ import * as RNFS from 'react-native-fs';
 import { CSVDownload } from 'react-csv';
 
 
-const CSVWrite = () => {
+const CSVWrite = ({route}) => {
 
   const Apidata = 'https://bked.logistiex.com/SellerMainScreen/getCP/Tarun123';
 
@@ -71,15 +71,10 @@ const UploadFile = () => {
 const [isLoading, setLoading] = useState(true);
 const [data, setData] = useState([]);
 
-let r = '';
+let r = [];
 r = data;
 useEffect(() => {
-  fetch(Apidata)
-    .then((response) => response.json()) 
-    .then((json) => {
-      setData(json);
-    })
-    .catch((error) => alert(error))
+  setData([...route.params.dataa]);
    
 }, []);
 

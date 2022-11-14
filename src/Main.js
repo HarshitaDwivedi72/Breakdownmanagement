@@ -98,7 +98,9 @@ const Main = () => {
       </View>
       </TouchableOpacity>
       
-      <TouchableOpacity  onPress={()=>navigation.navigate('NewSellerPickup')}>
+      <TouchableOpacity  onPress={()=>navigation.navigate('NewSellerPickup',{
+        count : count
+      })}>
       <View style={styles.normal}>
         <Text style={styles.text}>Seller Pickups </Text>
         <Text style={styles.text}>{count}</Text>

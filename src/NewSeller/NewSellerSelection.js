@@ -77,7 +77,7 @@ const NewSellerSelection = ({route}) => {
     
     <TouchableOpacity onPress={()=>navigation.navigate('reject')}>
               <View style={styles.normal}>
-                 <Text style={styles.text}>Seller Pickups  (Completed/Total) </Text>
+                 <Text style={styles.text}>Seller Pickups  {route.params.Forward} </Text>
               </View>
     </TouchableOpacity>
     <View>

@@ -1,12 +1,14 @@
 import { Container,ArrowForwardIcon, NativeBaseProvider, 
   Box, 
   Image,
-  Center, 
-  Button} from 'native-base';
+  Center } from 'native-base';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import{StyleSheet,Text,TouchableOpacity,View, ScrollView, TextInput,getPick} from 'react-native';
+// import { getPickup } from '../Config';
 import { useNavigation } from '@react-navigation/native';
+import DropDownPicker from 'react-native-dropdown-picker';
+import { Picker } from '@react-native-picker/picker';
 
 
 const Reject = () => {
@@ -54,7 +56,7 @@ const Reject = () => {
       <Box flex={1} bg="#fff">
 
 
-      <TouchableOpacity onPress={()=>navigation.navigate('pod')}>
+      <TouchableOpacity>
        <View style={styles.normal}>
            <Text style={styles.text}>Reject Reason Code </Text>
        </View>
@@ -64,9 +66,24 @@ const Reject = () => {
         <View style={styles.bt3}>
 
 
-          <Button>Damaged shipment</Button>
-          <Button>wrong packing</Button>
-          <Button>empty parcel</Button>
+        <Picker
+      selectedValue={DropDownValue}
+      onValueChange={(value, index) => setDropDownValue(value)}
+      mode="dropdown" // Android only
+      style={styles.picker}
+    >
+      <Picker.Item label="Please select " value="Unknown" />
+     
+      {
+        DriverData.map((d) => {
+          return(
+            <Picker.Item value={d.pickupFailureReasonGroupName} label={d.pickupFailureReasonName} key={d.pickupFailureReasonUserID}/>
+          )
+        })
+      }
+    </Picker>
+
+
 
         </View>
       </TouchableOpacity >
@@ -76,6 +93,13 @@ const Reject = () => {
       <View style={styles.container}>
         <View style={styles.btn}>
           <Text style={styles.textbtn}>Submit</Text>
+        </View>
+      </View>
+  </TouchableOpacity>
+  <TouchableOpacity onPress={()=>navigation.navigate('ShipmentBarcode')}>
+      <View style={styles.container}>
+        <View style={styles.btn}>
+          <Text style={styles.textbtn}>Cancel</Text>
         </View>
       </View>
   </TouchableOpacity>
